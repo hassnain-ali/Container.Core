@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<LangVersion>10.0</LangVersion>
+		<Version>1.4.4</Version>
+		<Description>Basic data for start up project</Description>
+		<GenerateDocumentationFile>False</GenerateDocumentationFile>
+		<SignAssembly>True</SignAssembly>
+		<Title>Container Core</Title>
+		<Copyright>Copyright (c)</Copyright>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Autofac" Version="6.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.5" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
+		<PackageReference Include="NuGet.CommandLine" Version="6.1.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.1" />
+		<PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
+		<PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
+	</ItemGroup>
+
+</Project>
