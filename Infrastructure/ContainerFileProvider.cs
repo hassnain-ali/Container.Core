@@ -1,4 +1,6 @@
-﻿namespace Container.Core.Infrastructure;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Container.Core.Infrastructure;
 
 /// <summary>
 /// IO functions using the on-disk file system
