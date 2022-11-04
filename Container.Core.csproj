@@ -3,11 +3,25 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<LangVersion>10.0</LangVersion>
-		<Version>1.4.4</Version>
-		<Description>Basic data for start up project</Description>
-		<GenerateDocumentationFile>False</GenerateDocumentationFile>
+		<Version>1.4.5.1</Version>
+		<Description>
+			Autofac configration container for startup projects which includes
+			Dependency container,
+			Dependency resolver,
+			Cache (In memory/ Distributed cache),
+			Swagger configration options for versioned API,
+			Swagger operational Filters,
+			Singleton services / Container,
+			Types resolver/ Types finder,
+			Files provider,
+			Enum Helpers,
+			Common Helpers and validation methods,
+
+			Credits: Autofac, .NET Boxed, Nop Commerce
+		</Description>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<SignAssembly>True</SignAssembly>
-		<Title>Container Core</Title>
+		<Title>Container Provider</Title>
 		<Copyright>Copyright (c)</Copyright>
 		<PackageProjectUrl>https://github.com/hassnain-ali/Container.Core</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
@@ -17,26 +31,29 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Autofac" Version="6.3.0" />
+		<PackageReference Include="Autofac" Version="6.4.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
-		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.10" />
 		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
-		<PackageReference Include="NuGet.CommandLine" Version="6.1.0">
+		<PackageReference Include="NuGet.CommandLine" Version="6.3.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.1" />
 		<PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
 		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
 		<PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="README.md">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
+		<None Update="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 
 </Project>

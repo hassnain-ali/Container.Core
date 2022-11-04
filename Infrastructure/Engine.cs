@@ -29,9 +29,12 @@ public class Engine : IEngine
     protected IServiceProvider GetServiceProvider()
     {
         if (ServiceProvider == null)
+        {
             return null;
-        var accessor = ServiceProvider?.GetService<IHttpContextAccessor>();
-        var context = accessor?.HttpContext;
+        }
+
+        IHttpContextAccessor accessor = ServiceProvider?.GetService<IHttpContextAccessor>();
+        HttpContext context = accessor?.HttpContext;
         return context?.RequestServices ?? ServiceProvider;
     }
 
@@ -43,8 +46,22 @@ public class Engine : IEngine
     public virtual void RegisterDependencies(ContainerBuilder containerBuilder, IServiceProvider provider)
     {
         //register engine
-        containerBuilder.RegisterInstance(this).As<IEngine>().SingleInstance();
-        containerBuilder.RegisterInstance(provider).AsSelf().SingleInstance();
+        _ = containerBuilder.RegisterInstance(this).As<IEngine>().SingleInstance();
+        _ = containerBuilder.RegisterInstance(provider).AsSelf().SingleInstance();
+        ServiceProvider = provider;
+    }
+
+    /// <summary>
+    /// Register dependencies
+    /// </summary>
+    /// <param name="containerBuilder">Container builder</param>
+    /// <param name="nopConfig">Nop configuration parameters</param>
+    public virtual void RegisterDependencies(ContainerBuilder containerBuilder, IServiceCollection collection)
+    {
+        //register engine
+        _ = containerBuilder.RegisterInstance(this).As<IEngine>().SingleInstance();
+        ServiceProvider provider = collection.BuildServiceProvider();
+        _ = containerBuilder.RegisterInstance(provider).AsSelf().SingleInstance();
         ServiceProvider = provider;
     }
 
@@ -84,12 +101,12 @@ public class Engine : IEngine
     public virtual object ResolveUnregistered(Type type)
     {
         Exception innerException = null;
-        foreach (var constructor in type.GetConstructors())
+        foreach (ConstructorInfo constructor in type.GetConstructors())
         {
             try
             {
                 //try to resolve constructor parameters
-                var parameters = constructor.GetParameters().Select(parameter =>
+                IEnumerable<object> parameters = constructor.GetParameters().Select(parameter =>
                 {
                     object service = Resolve(parameter.ParameterType);
                     return service ?? throw new Exception("Unknown dependency");

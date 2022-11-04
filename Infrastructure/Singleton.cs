@@ -16,10 +16,7 @@ public abstract class Singleton<T> : BaseSingleton
             AllSingletons[typeof(T)] = value;
         }
     }
-    public static T Init(T val)
-    {
-        return Instance = val;
-    }
+    public static T Init(T val) => Instance = val;
 }
 /// <summary>
 /// Provides access to all "singletons" stored by <see cref="Singleton{T}"/>.

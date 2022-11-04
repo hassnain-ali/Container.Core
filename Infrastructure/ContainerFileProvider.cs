@@ -8,9 +8,12 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     /// <summary>
     /// Initializes a new instance of a NopFileProvider
     /// </summary>
-    /// <param name="webHostEnvironment">Hosting environment</param>
+    /// <param name="path">Hosting environment</param>
     public ContainerFileProvider(string path)
-        : base(path) => WebRootPath = path;
+        : base(path)
+    {
+        WebRootPath = path;
+    }
 
     #region Utilities
 
@@ -28,7 +31,10 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
         {
             curIteration += 1;
             if (curIteration > maxIterationToWait)
+            {
                 return;
+            }
+
             Thread.Sleep(100);
         }
     }
@@ -40,7 +46,7 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     /// <param name="path">The path to be tested.</param>
     /// <returns><see langword="true"/> if the path is a valid UNC path; 
     /// otherwise, <see langword="false"/>.</returns>
-    protected static bool IsUncPath(string path) => Uri.TryCreate(path, UriKind.Absolute, out var uri) && uri.IsUnc;
+    protected static bool IsUncPath(string path) => Uri.TryCreate(path, UriKind.Absolute, out Uri uri) && uri.IsUnc;
 
     #endregion
 
@@ -56,8 +62,10 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
         string path = Path.Combine(paths.SelectMany(p => IsUncPath(p) ? new[] { p } : p.Split('\\', '/')).ToArray());
 
         if (Environment.OSVersion.Platform == PlatformID.Unix && !IsUncPath(path))
+        {
             //add leading slash to correctly form path in the UNIX system
             path = "/" + path;
+        }
 
         return path;
     }
@@ -69,7 +77,9 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     public virtual void CreateDirectory(string path)
     {
         if (!DirectoryExists(path))
-            Directory.CreateDirectory(path);
+        {
+            _ = Directory.CreateDirectory(path);
+        }
     }
 
     /// <summary>
@@ -79,7 +89,9 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     public virtual void CreateFile(string path)
     {
         if (FileExists(path))
+        {
             return;
+        }
 
         FileInfo fileInfo = new(path);
         CreateDirectory(fileInfo.DirectoryName);
@@ -97,7 +109,9 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     public void DeleteDirectory(string path)
     {
         if (string.IsNullOrEmpty(path))
+        {
             throw new ArgumentNullException(path);
+        }
 
         //find more info about directory deletion
         //and why we use this approach at https://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
@@ -128,7 +142,9 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     public virtual void DeleteFile(string filePath)
     {
         if (!FileExists(filePath))
+        {
             return;
+        }
 
         File.Delete(filePath);
     }
@@ -217,7 +233,9 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
         List<string> allPaths = new();
 
         if (paths.Any() && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
+        {
             allPaths.Add(WebRootPath);
+        }
 
         allPaths.AddRange(paths);
 
@@ -264,7 +282,9 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     public virtual string[] GetDirectories(string path, string searchPattern = "", bool topDirectoryOnly = true)
     {
         if (string.IsNullOrEmpty(searchPattern))
+        {
             searchPattern = "*";
+        }
 
         return Directory.GetDirectories(path, searchPattern,
             topDirectoryOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
@@ -329,7 +349,9 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     public virtual string[] GetFiles(string directoryPath, string searchPattern = "", bool topDirectoryOnly = true)
     {
         if (string.IsNullOrEmpty(searchPattern))
+        {
             searchPattern = "*.*";
+        }
 
         return Directory.GetFiles(directoryPath, searchPattern,
             topDirectoryOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
@@ -378,10 +400,14 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     public virtual string GetVirtualPath(string path)
     {
         if (string.IsNullOrEmpty(path))
+        {
             return path;
+        }
 
         if (!IsDirectory(path) && FileExists(path))
+        {
             path = new FileInfo(path).DirectoryName;
+        }
 
         path = path?.Replace(WebRootPath, string.Empty).Replace('\\', '/').Trim('/').TrimStart('~', '/');
 
@@ -468,5 +494,8 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
 
     #endregion
 
+    /// <summary>
+    /// wwwroot path
+    /// </summary>
     protected string WebRootPath { get; }
 }

@@ -15,17 +15,27 @@ public partial class CacheKey
         Init(cacheKey.Key, cacheKey.CacheTime, cacheKey.Prefixes.ToArray());
 
         if (!keyObjects.Any())
+        {
             return;
+        }
 
         Key = string.Format(_keyFormat, keyObjects.Select(createCacheKeyParameters).ToArray());
 
         for (int i = 0; i < Prefixes.Count; i++)
+        {
             Prefixes[i] = string.Format(Prefixes[i], keyObjects.Select(createCacheKeyParameters).ToArray());
+        }
     }
 
-    public CacheKey(string cacheKey, int? cacheTime = null, params string[] prefixes) => Init(cacheKey, cacheTime, prefixes);
+    public CacheKey(string cacheKey, int? cacheTime = null, params string[] prefixes)
+    {
+        Init(cacheKey, cacheTime, prefixes);
+    }
 
-    public CacheKey(string cacheKey, params string[] prefixes) => Init(cacheKey, null, prefixes);
+    public CacheKey(string cacheKey, params string[] prefixes)
+    {
+        Init(cacheKey, null, prefixes);
+    }
 
     #endregion
 
@@ -44,7 +54,9 @@ public partial class CacheKey
         _keyFormat = cacheKey;
 
         if (cacheTime.HasValue)
+        {
             CacheTime = cacheTime.Value;
+        }
 
         Prefixes.AddRange(prefixes.Where(prefix => !string.IsNullOrEmpty(prefix)));
     }

@@ -11,13 +11,22 @@ public class AppDomainTypeFinder : ITypeFinder
     #region Fields
 
     private readonly bool _ignoreReflectionErrors = true;
+    /// <summary>
+    /// 
+    /// </summary>
     protected IContainerFileProvider _fileProvider;
 
     #endregion
 
     #region Ctor
-
-    public AppDomainTypeFinder(IContainerFileProvider fileProvider = null) => _fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileProvider"></param>
+    public AppDomainTypeFinder(IContainerFileProvider fileProvider = null)
+    {
+        _fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+    }
 
     #endregion
 
@@ -30,13 +39,17 @@ public class AppDomainTypeFinder : ITypeFinder
     /// <param name="assemblies"></param>
     private void AddAssembliesInAppDomain(List<string> addedAssemblyNames, List<Assembly> assemblies)
     {
-        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
             if (!Matches(assembly.FullName))
+            {
                 continue;
+            }
 
             if (addedAssemblyNames.Contains(assembly.FullName))
+            {
                 continue;
+            }
 
             assemblies.Add(assembly);
             addedAssemblyNames.Add(assembly.FullName);
@@ -54,7 +67,9 @@ public class AppDomainTypeFinder : ITypeFinder
         {
             Assembly assembly = Assembly.Load(assemblyName);
             if (addedAssemblyNames.Contains(assembly.FullName))
+            {
                 continue;
+            }
 
             assemblies.Add(assembly);
             addedAssemblyNames.Add(assembly.FullName);
@@ -97,7 +112,7 @@ public class AppDomainTypeFinder : ITypeFinder
     {
         List<string> loadedAssemblyNames = new();
 
-        foreach (var a in GetAssemblies())
+        foreach (Assembly a in GetAssemblies())
         {
             loadedAssemblyNames.Add(a.FullName);
         }
@@ -114,7 +129,7 @@ public class AppDomainTypeFinder : ITypeFinder
                 AssemblyName an = AssemblyName.GetAssemblyName(dllPath);
                 if (Matches(an.FullName) && !loadedAssemblyNames.Contains(an.FullName))
                 {
-                    App.Load(an);
+                    _ = App.Load(an);
                 }
 
                 //old loading stuff
@@ -141,14 +156,18 @@ public class AppDomainTypeFinder : ITypeFinder
     {
         try
         {
-            var genericTypeDefinition = openGeneric.GetGenericTypeDefinition();
-            foreach (var implementedInterface in type.FindInterfaces((objType, objCriteria) => true, null))
+            Type genericTypeDefinition = openGeneric.GetGenericTypeDefinition();
+            foreach (Type implementedInterface in type.FindInterfaces((objType, objCriteria) => true, null))
             {
                 if (!implementedInterface.IsGenericType)
+                {
                     continue;
+                }
 
                 if (genericTypeDefinition.IsAssignableFrom(implementedInterface.GetGenericTypeDefinition()))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -201,7 +220,7 @@ public class AppDomainTypeFinder : ITypeFinder
         List<Type> result = new();
         try
         {
-            foreach (var a in assemblies)
+            foreach (Assembly a in assemblies)
             {
                 Type[] types = null;
                 try
@@ -218,15 +237,21 @@ public class AppDomainTypeFinder : ITypeFinder
                 }
 
                 if (types == null)
+                {
                     continue;
+                }
 
-                foreach (var t in types)
+                foreach (Type t in types)
                 {
                     if (!assignTypeFrom.IsAssignableFrom(t) && (!assignTypeFrom.IsGenericTypeDefinition || !DoesTypeImplementOpenGeneric(t, assignTypeFrom)))
+                    {
                         continue;
+                    }
 
                     if (t.IsInterface)
+                    {
                         continue;
+                    }
 
                     if (onlyConcreteClasses)
                     {
@@ -245,8 +270,10 @@ public class AppDomainTypeFinder : ITypeFinder
         catch (ReflectionTypeLoadException ex)
         {
             string msg = string.Empty;
-            foreach (var e in ex.LoaderExceptions)
+            foreach (Exception e in ex.LoaderExceptions)
+            {
                 msg += e.Message + Environment.NewLine;
+            }
 
             Exception fail = new(msg, ex);
             Debug.WriteLine(fail.Message, fail);
@@ -267,7 +294,10 @@ public class AppDomainTypeFinder : ITypeFinder
         List<Assembly> assemblies = new();
 
         if (LoadAppDomainAssemblies)
+        {
             AddAssembliesInAppDomain(addedAssemblyNames, assemblies);
+        }
+
         AddConfiguredAssemblies(addedAssemblyNames, assemblies);
 
         return assemblies;

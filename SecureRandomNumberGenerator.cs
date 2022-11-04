@@ -14,7 +14,10 @@ public partial class SecureRandomNumberGenerator : RandomNumberGenerator
 
     #region Ctor
 
-    public SecureRandomNumberGenerator() => _rng = Create();
+    public SecureRandomNumberGenerator()
+    {
+        _rng = Create();
+    }
 
     #endregion
 
@@ -31,7 +34,7 @@ public partial class SecureRandomNumberGenerator : RandomNumberGenerator
 
     public int Next(int minValue, int maxValue) => minValue > maxValue
             ? throw new ArgumentOutOfRangeException(nameof(minValue))
-            : (int)Math.Floor(minValue + ((double)maxValue - minValue) * NextDouble());
+            : (int)Math.Floor(minValue + (((double)maxValue - minValue) * NextDouble()));
 
     public double NextDouble()
     {
@@ -50,7 +53,9 @@ public partial class SecureRandomNumberGenerator : RandomNumberGenerator
     protected override void Dispose(bool disposing)
     {
         if (_disposed)
+        {
             return;
+        }
 
         if (disposing)
         {

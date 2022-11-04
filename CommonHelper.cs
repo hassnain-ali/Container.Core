@@ -16,7 +16,10 @@ public partial class CommonHelper
 
     #region Ctor
 
-    static CommonHelper() => _emailRegex = new Regex(EMAIL_EXPRESSION, RegexOptions.IgnoreCase);
+    static CommonHelper()
+    {
+        _emailRegex = new Regex(EMAIL_EXPRESSION, RegexOptions.IgnoreCase);
+    }
 
     #endregion
 
@@ -44,7 +47,9 @@ public partial class CommonHelper
     public static bool IsValidEmail(string email)
     {
         if (string.IsNullOrEmpty(email))
+        {
             return false;
+        }
 
         email = email.Trim();
 
@@ -56,7 +61,7 @@ public partial class CommonHelper
     /// </summary>
     /// <param name="ipAddress">IPAddress to verify</param>
     /// <returns>true if the string is a valid IpAddress and false if it's not</returns>
-    public static bool IsValidIpAddress(string ipAddress) => IPAddress.TryParse(ipAddress, out var _);
+    public static bool IsValidIpAddress(string ipAddress) => IPAddress.TryParse(ipAddress, out IPAddress _);
 
     /// <summary>
     /// Generate random digit code
@@ -68,7 +73,10 @@ public partial class CommonHelper
         using SecureRandomNumberGenerator random = new();
         string str = string.Empty;
         for (int i = 0; i < length; i++)
+        {
             str = string.Concat(str, random.Next(10).ToString());
+        }
+
         return str;
     }
 
@@ -94,10 +102,14 @@ public partial class CommonHelper
     public static string EnsureMaximumLength(string str, int maxLength, string postfix = null)
     {
         if (string.IsNullOrEmpty(str))
+        {
             return str;
+        }
 
         if (str.Length <= maxLength)
+        {
             return str;
+        }
 
         int pLen = postfix?.Length ?? 0;
 
@@ -145,15 +157,21 @@ public partial class CommonHelper
     {
         //also see Enumerable.SequenceEqual(a1, a2);
         if (ReferenceEquals(a1, a2))
+        {
             return true;
+        }
 
         if (a1 == null || a2 == null)
+        {
             return false;
+        }
 
         if (a1.Length != a2.Length)
+        {
             return false;
+        }
 
-        var comparer = EqualityComparer<T>.Default;
+        EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         return !a1.Where((t, i) => !comparer.Equals(t, a2[i])).Any();
     }
 
@@ -165,17 +183,33 @@ public partial class CommonHelper
     /// <param name="value">The value to set the property to.</param>
     public static void SetProperty(object instance, string propertyName, object value)
     {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
-        if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+        if (instance == null)
+        {
+            throw new ArgumentNullException(nameof(instance));
+        }
 
-        var instanceType = instance.GetType();
-        var pi = instanceType.GetProperty(propertyName);
+        if (propertyName == null)
+        {
+            throw new ArgumentNullException(nameof(propertyName));
+        }
+
+        Type instanceType = instance.GetType();
+        PropertyInfo pi = instanceType.GetProperty(propertyName);
         if (pi == null)
+        {
             throw new Exception("No property '{0}' found on the instance of type '{1}'.");
+        }
+
         if (!pi.CanWrite)
+        {
             throw new Exception("The property '{0}' on the instance of type '{1}' does not have a setter.");
+        }
+
         if (value != null && !value.GetType().IsAssignableFrom(pi.PropertyType))
+        {
             value = To(value, pi.PropertyType);
+        }
+
         pi.SetValue(instance, value, Array.Empty<object>());
     }
 
@@ -198,15 +232,19 @@ public partial class CommonHelper
     public static object To(object value, Type destinationType, CultureInfo culture)
     {
         if (value == null)
+        {
             return null;
+        }
 
-        var sourceType = value.GetType();
+        Type sourceType = value.GetType();
 
-        var destinationConverter = TypeDescriptor.GetConverter(destinationType);
+        TypeConverter destinationConverter = TypeDescriptor.GetConverter(destinationType);
         if (destinationConverter.CanConvertFrom(value.GetType()))
+        {
             return destinationConverter.ConvertFrom(null, culture, value);
+        }
 
-        var sourceConverter = TypeDescriptor.GetConverter(sourceType);
+        TypeConverter sourceConverter = TypeDescriptor.GetConverter(sourceType);
         return sourceConverter.CanConvertTo(destinationType)
             ? sourceConverter.ConvertTo(null, culture, value, destinationType)
             : destinationType.IsEnum && value is int @int
@@ -231,13 +269,23 @@ public partial class CommonHelper
     /// <returns>Converted string</returns>
     public static string ConvertEnum(string str)
     {
-        if (string.IsNullOrEmpty(str)) return string.Empty;
+        if (string.IsNullOrEmpty(str))
+        {
+            return string.Empty;
+        }
+
         string result = string.Empty;
         foreach (char c in str)
+        {
             if (c.ToString() != c.ToString().ToLower())
+            {
                 result += " " + c.ToString();
+            }
             else
+            {
                 result += c.ToString();
+            }
+        }
 
         //ensure no spaces (e.g. when the first letter is upper case)
         result = result.TrimStart();
@@ -256,7 +304,10 @@ public partial class CommonHelper
         //this assumes you are looking for the western idea of age and not using East Asian reckoning.
         int age = endDate.Year - startDate.Year;
         if (startDate > endDate.AddYears(-age))
+        {
             age--;
+        }
+
         return age;
     }
 
@@ -278,7 +329,7 @@ public partial class CommonHelper
             throw new ArgumentException("The field name cannot be null or empty.", nameof(fieldName));
         }
 
-        var t = target.GetType();
+        Type t = target.GetType();
         FieldInfo fi = null;
 
         while (t != null)
@@ -286,7 +337,9 @@ public partial class CommonHelper
             fi = t.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
 
             if (fi != null)
+            {
                 break;
+            }
 
             t = t.BaseType;
         }

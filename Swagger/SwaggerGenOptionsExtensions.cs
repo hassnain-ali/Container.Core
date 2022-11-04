@@ -23,7 +23,7 @@ public static class SwaggerGenOptionsExtensions
         if (!string.IsNullOrEmpty(assembly.Location))
         {
             string filePath = Path.ChangeExtension(assembly.Location, ".xml");
-            IncludeXmlCommentsIfExists(options, filePath);
+            _ = IncludeXmlCommentsIfExists(options, filePath);
         }
 
         return options;

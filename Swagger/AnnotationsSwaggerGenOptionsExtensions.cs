@@ -3,21 +3,30 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Container.Core.Swagger;
 
+/// <summary>
+/// 
+/// </summary>
 public static class AnnotationsSwaggerGenOptionsExtensions
 {
-    //
-    // Summary:
-    //     Enables Swagger annotations (SwaggerOperationAttribute, SwaggerParameterAttribute
-    //     etc.)
-    //
-    // Parameters:
-    //   options:
-    //
-    //   enableAnnotationsForInheritance:
-    //     Enables SwaggerSubType attribute for inheritance
-    //
-    //   enableAnnotationsForPolymorphism:
-    //     Enables SwaggerSubType and SwaggerDiscriminator attributes for polymorphism
+    /// <summary>
+    /// 
+    ///
+    /// Summary:
+    ///     Enables Swagger annotations (SwaggerOperationAttribute, SwaggerParameterAttribute
+    ///     etc.)
+    ///
+    /// Parameters:
+    ///   options:
+    ///
+    ///   enableAnnotationsForInheritance:
+    ///     Enables SwaggerSubType attribute for inheritance
+    ///
+    ///   enableAnnotationsForPolymorphism:
+    ///     Enables SwaggerSubType and SwaggerDiscriminator attributes for polymorphism
+    /// </summary>
+    /// <param name="options"></param>
+    /// <param name="enableAnnotationsForInheritance"></param>
+    /// <param name="enableAnnotationsForPolymorphism"></param>
     public static void EnableAnnotations(this SwaggerGenOptions options, bool enableAnnotationsForInheritance, bool enableAnnotationsForPolymorphism)
     {
         options.SchemaFilter<AnnotationsSchemaFilter>(Array.Empty<object>());
@@ -41,17 +50,25 @@ public static class AnnotationsSwaggerGenOptionsExtensions
             }
         }
     }
+    /// <summary>
+    ///
+    /// Summary:
+    ///     Enables Swagger annotations (SwaggerOperationAttribute, SwaggerParameterAttribute
+    ///     etc.)
+    ///
+    /// Parameters:
+    ///   options:
+    /// </summary>
+    /// <param name="options"></param>
 
-    //
-    // Summary:
-    //     Enables Swagger annotations (SwaggerOperationAttribute, SwaggerParameterAttribute
-    //     etc.)
-    //
-    // Parameters:
-    //   options:
     public static void EnableAnnotations(this SwaggerGenOptions options)
         => options.EnableAnnotations(enableAnnotationsForInheritance: false, enableAnnotationsForPolymorphism: false);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
     private static IEnumerable<Type> AnnotationsSubTypesSelector(Type type)
     {
         IEnumerable<SwaggerSubTypeAttribute> source = type.GetCustomAttributes(inherit: false).OfType<SwaggerSubTypeAttribute>();

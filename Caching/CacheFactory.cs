@@ -1,12 +1,22 @@
 ﻿namespace Container.Core.Caching;
 
+/// <summary>
+/// 
+/// </summary>
 public class CacheFactory : IDisposable, ICacheFactory
 {
     private bool _disposed;
-    readonly IMemoryCache _memoryCache;
+    private readonly IMemoryCache _memoryCache;
     private static readonly ConcurrentDictionary<string, CancellationTokenSource> _prefixes = new();
     private static CancellationTokenSource _clearToken = new();
-    public CacheFactory(IMemoryCache memoryCache) => _memoryCache = memoryCache;
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="memoryCache"></param>
+    public CacheFactory(IMemoryCache memoryCache)
+    {
+        _memoryCache = memoryCache;
+    }
 
     #region Utilities
 
@@ -24,11 +34,11 @@ public class CacheFactory : IDisposable, ICacheFactory
         };
 
         //add tokens to clear cache entries
-        options.AddExpirationToken(new CancellationChangeToken(_clearToken.Token));
+        _ = options.AddExpirationToken(new CancellationChangeToken(_clearToken.Token));
         foreach (string keyPrefix in key.Prefixes.ToList())
         {
-            var tokenSource = _prefixes.GetOrAdd(keyPrefix, value: new());
-            options.AddExpirationToken(new CancellationChangeToken(tokenSource.Token));
+            CancellationTokenSource tokenSource = _prefixes.GetOrAdd(keyPrefix, value: new());
+            _ = options.AddExpirationToken(new CancellationChangeToken(tokenSource.Token));
         }
 
         return options;
@@ -48,18 +58,23 @@ public class CacheFactory : IDisposable, ICacheFactory
     public T GetOrCreate<T>(CacheKey key, Func<T> acquire)
     {
         if (key.CacheTime <= 0)
-            return acquire();
-
-        var result = _memoryCache.GetOrCreate(key.Key, entry =>
         {
-            entry.SetOptions(PrepareEntryOptions(key));
+            return acquire();
+        }
+
+        T result = _memoryCache.GetOrCreate(key.Key, entry =>
+        {
+            _ = entry.SetOptions(PrepareEntryOptions(key));
 
             return acquire();
         });
 
         //do not cache null value
         if (result == null)
+        {
             Remove(key);
+        }
+
         return result;
     }
 
@@ -79,17 +94,21 @@ public class CacheFactory : IDisposable, ICacheFactory
     public async Task<T> GetOrCreateAsync<T>(CacheKey key, Func<Task<T>> acquire)
     {
         if (key.CacheTime <= 0)
-            return await acquire();
-
-        var result = await _memoryCache.GetOrCreateAsync(key.Key, async entry =>
         {
-            entry.SetOptions(PrepareEntryOptions(key));
+            return await acquire();
+        }
+
+        T result = await _memoryCache.GetOrCreateAsync(key.Key, async entry =>
+        {
+            _ = entry.SetOptions(PrepareEntryOptions(key));
 
             return await acquire();
         });
         //do not cache null value
         if (result is null || IsNullOrEmpty(result))//|| result is new())
+        {
             Remove(key);
+        }
 
         return result;
     }
@@ -102,9 +121,11 @@ public class CacheFactory : IDisposable, ICacheFactory
     public void Set(CacheKey key, object data)
     {
         if (key.CacheTime <= 0 || data == null)
+        {
             return;
+        }
 
-        _memoryCache.Set(key.Key, data, PrepareEntryOptions(key));
+        _ = _memoryCache.Set(key.Key, data, PrepareEntryOptions(key));
     }
 
     /// <summary>
@@ -125,11 +146,13 @@ public class CacheFactory : IDisposable, ICacheFactory
     {
         //ensure that lock is acquired
         if (IsSet(new(key)))
+        {
             return false;
+        }
 
         try
         {
-            _memoryCache.Set(key, key, expirationTime);
+            _ = _memoryCache.Set(key, key, expirationTime);
 
             //perform action
             action();
@@ -155,7 +178,7 @@ public class CacheFactory : IDisposable, ICacheFactory
     /// <param name="prefix">String key prefix</param>
     public void RemoveByPrefix(string prefix)
     {
-        _prefixes.TryRemove(prefix, out var tokenSource);
+        _ = _prefixes.TryRemove(prefix, out CancellationTokenSource tokenSource);
         tokenSource?.Cancel();
         tokenSource?.Dispose();
     }
@@ -172,12 +195,12 @@ public class CacheFactory : IDisposable, ICacheFactory
 
         foreach (string prefix in _prefixes.Keys.ToList())
         {
-            _prefixes.TryRemove(prefix, out var tokenSource);
+            _ = _prefixes.TryRemove(prefix, out CancellationTokenSource tokenSource);
             tokenSource?.Dispose();
         }
     }
 
-    static bool IsNullOrEmpty<T>(T vals)
+    private static bool IsNullOrEmpty<T>(T vals)
     {
         try
         {
@@ -202,7 +225,9 @@ public class CacheFactory : IDisposable, ICacheFactory
     protected virtual void Dispose(bool disposing)
     {
         if (_disposed)
+        {
             return;
+        }
 
         if (disposing)
         {

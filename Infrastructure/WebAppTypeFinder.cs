@@ -44,7 +44,9 @@ public class WebAppTypeFinder : AppDomainTypeFinder
     public override IList<Assembly> GetAssemblies()
     {
         if (!EnsureBinFolderAssembliesLoaded || _binFolderAssembliesLoaded)
+        {
             return base.GetAssemblies();
+        }
 
         _binFolderAssembliesLoaded = true;
         string binPath = GetBinDirectory();

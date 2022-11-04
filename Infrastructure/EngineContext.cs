@@ -33,7 +33,9 @@ public class EngineContext : Singleton<IEngine>
         get
         {
             if (Instance == null)
-                Create();
+            {
+                _ = Create();
+            }
 
             return Instance;
         }
