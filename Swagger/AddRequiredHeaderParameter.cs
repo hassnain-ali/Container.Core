@@ -4,9 +4,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Container.Core.Swagger;
 
-/// <summary>
-/// 
-/// </summary>
+/// <inheritdoc/>
 public class AddRequiredHeaderParameter : IOperationFilter
 {
     ///<inheritdoc/>

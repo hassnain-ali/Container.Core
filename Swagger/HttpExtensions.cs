@@ -4,9 +4,17 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace Container.Core.Swagger;
 
+/// <summary>
+/// 
+/// </summary>
 public static class HttpExtensions
 {
-    public static IServiceCollection RegisterVersionApi(this IServiceCollection services)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddVersionApiSwaggerAPI(this IServiceCollection services)
     {
         _ = services.AddCustomConfigureOptions();
         _ = services.AddDistributedMemoryCache();
@@ -18,7 +26,11 @@ public static class HttpExtensions
         _ = services.AddVersionedApiExplorer();
         return services;
     }
-    public static void UseVersionApi(this WebApplication app)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="app"></param>
+    public static void UseVersionApiSwaggerAPI(this WebApplication app)
     {
         _ = app.UseForwardedHeaders();
         _ = app.UseResponseCaching();

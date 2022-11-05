@@ -1,15 +1,26 @@
 ﻿namespace Container.Core.Caching;
 
+/// <summary>
+/// 
+/// </summary>
 public partial class CacheKey
 {
     #region Fields
-
+    /// <summary>
+    /// 
+    /// </summary>
     protected string _keyFormat = "";
 
     #endregion
 
     #region Ctor
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cacheKey"></param>
+    /// <param name="createCacheKeyParameters"></param>
+    /// <param name="keyObjects"></param>
     public CacheKey(CacheKey cacheKey, Func<object, object> createCacheKeyParameters, params object[] keyObjects)
     {
         Init(cacheKey.Key, cacheKey.CacheTime, cacheKey.Prefixes.ToArray());
@@ -27,11 +38,22 @@ public partial class CacheKey
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cacheKey"></param>
+    /// <param name="cacheTime"></param>
+    /// <param name="prefixes"></param>
     public CacheKey(string cacheKey, int? cacheTime = null, params string[] prefixes)
     {
         Init(cacheKey, cacheTime, prefixes);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cacheKey"></param>
+    /// <param name="prefixes"></param>
     public CacheKey(string cacheKey, params string[] prefixes)
     {
         Init(cacheKey, null, prefixes);

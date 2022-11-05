@@ -13,7 +13,9 @@ public partial class SecureRandomNumberGenerator : RandomNumberGenerator
     #endregion
 
     #region Ctor
-
+    /// <summary>
+    /// 
+    /// </summary>
     public SecureRandomNumberGenerator()
     {
         _rng = Create();
@@ -22,20 +24,36 @@ public partial class SecureRandomNumberGenerator : RandomNumberGenerator
     #endregion
 
     #region Methods
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public int Next()
     {
         byte[] data = new byte[sizeof(int)];
         _rng.GetBytes(data);
         return BitConverter.ToInt32(data, 0) & (int.MaxValue - 1);
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="maxValue"></param>
+    /// <returns></returns>
     public int Next(int maxValue) => Next(0, maxValue);
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="minValue"></param>
+    /// <param name="maxValue"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public int Next(int minValue, int maxValue) => minValue > maxValue
             ? throw new ArgumentOutOfRangeException(nameof(minValue))
             : (int)Math.Floor(minValue + (((double)maxValue - minValue) * NextDouble()));
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public double NextDouble()
     {
         byte[] data = new byte[sizeof(uint)];
@@ -43,13 +61,21 @@ public partial class SecureRandomNumberGenerator : RandomNumberGenerator
         uint randUint = BitConverter.ToUInt32(data, 0);
         return randUint / (uint.MaxValue + 1.0);
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="data"></param>
     public override void GetBytes(byte[] data) => _rng.GetBytes(data);
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="data"></param>
     public override void GetNonZeroBytes(byte[] data) => _rng.GetNonZeroBytes(data);
 
 
-    // Protected implementation of Dispose pattern.
+    /// <summary>
+    /// Protected implementation of Dispose pattern.
+    /// </summary>
     protected override void Dispose(bool disposing)
     {
         if (_disposed)

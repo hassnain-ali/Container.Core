@@ -15,10 +15,7 @@ public class ConfigureHstsOptions : IConfigureOptions<HstsOptions>
 {
     private static readonly TimeSpan OneYear = TimeSpan.FromDays(365);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="options"></param>
+    /// <inheritdoc/>
     public void Configure(HstsOptions options)
     {
         // Preload the HSTS HTTP header for better security. See https://hstspreload.org/

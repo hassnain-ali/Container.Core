@@ -4,9 +4,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Container.Core.Swagger;
 
-//
-// Summary:
-//     Shows an example of a Microsoft.AspNetCore.Mvc.ProblemDetails containing errors.
+/// <summary>
+///     Shows an example of a Microsoft.AspNetCore.Mvc.ProblemDetails containing errors. 
+/// </summary>
 public class ProblemDetailsOperationFilter : IOperationFilter
 {
     //private const string StatusCode400 = "400";
@@ -27,10 +27,10 @@ public class ProblemDetailsOperationFilter : IOperationFilter
 
     //private const string StatusCode500 = "500";
 
-    //
-    // Summary:
-    //     Gets the 400 Bad Request example of a Microsoft.AspNetCore.Mvc.ProblemDetails
-    //     response.
+    /// <summary>
+    /// Gets the 400 Bad Request example of a Microsoft.AspNetCore.Mvc.ProblemDetails
+    /// response.
+    /// </summary>
     public static OpenApiObject Status400ProblemDetails
     {
         get;
@@ -49,11 +49,10 @@ public class ProblemDetailsOperationFilter : IOperationFilter
         }
     };
 
-
-    //
-    // Summary:
-    //     Gets the 401 Unauthorized example of a Microsoft.AspNetCore.Mvc.ProblemDetails
-    //     response.
+    /// <summary>
+    /// Gets the 401 Unauthorized example of a Microsoft.AspNetCore.Mvc.ProblemDetails
+    /// response.
+    /// </summary>
     public static OpenApiObject Status401ProblemDetails
     {
         get;
@@ -65,10 +64,9 @@ public class ProblemDetailsOperationFilter : IOperationFilter
         ["traceId"] = new OpenApiString("00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00")
     };
 
-
-    //
-    // Summary:
-    //     Gets the 403 Forbidden example of a Microsoft.AspNetCore.Mvc.ProblemDetails response.
+    /// <summary>
+    /// Gets the 403 Forbidden example of a Microsoft.AspNetCore.Mvc.ProblemDetails response.
+    /// </summary>
     public static OpenApiObject Status403ProblemDetails
     {
         get;
@@ -80,10 +78,9 @@ public class ProblemDetailsOperationFilter : IOperationFilter
         ["traceId"] = new OpenApiString("00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00")
     };
 
-
-    //
-    // Summary:
-    //     Gets the 404 Not Found example of a Microsoft.AspNetCore.Mvc.ProblemDetails response.
+    /// <summary>
+    /// Gets the 404 Not Found example of a Microsoft.AspNetCore.Mvc.ProblemDetails response.
+    /// </summary>
     public static OpenApiObject Status404ProblemDetails
     {
         get;
@@ -95,11 +92,10 @@ public class ProblemDetailsOperationFilter : IOperationFilter
         ["traceId"] = new OpenApiString("00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00")
     };
 
-
-    //
-    // Summary:
-    //     Gets the 406 Not Acceptable example of a Microsoft.AspNetCore.Mvc.ProblemDetails
-    //     response.
+    /// <summary>
+    /// Gets the 406 Not Acceptable example of a Microsoft.AspNetCore.Mvc.ProblemDetails
+    ///  response.
+    /// </summary>
     public static OpenApiObject Status406ProblemDetails
     {
         get;
@@ -111,10 +107,9 @@ public class ProblemDetailsOperationFilter : IOperationFilter
         ["traceId"] = new OpenApiString("00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00")
     };
 
-
-    //
-    // Summary:
-    //     Gets the 409 Conflict example of a Microsoft.AspNetCore.Mvc.ProblemDetails response.
+    /// <summary>
+    /// Gets the 409 Conflict example of a Microsoft.AspNetCore.Mvc.ProblemDetails response.
+    /// </summary>
     public static OpenApiObject Status409ProblemDetails
     {
         get;
@@ -126,11 +121,10 @@ public class ProblemDetailsOperationFilter : IOperationFilter
         ["traceId"] = new OpenApiString("00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00")
     };
 
-
-    //
-    // Summary:
-    //     Gets the 415 Unsupported Media Type example of a Microsoft.AspNetCore.Mvc.ProblemDetails
-    //     response.
+    /// <summary>
+    ///  Gets the 415 Unsupported Media Type example of a Microsoft.AspNetCore.Mvc.ProblemDetails
+    ///  response.
+    /// </summary>
     public static OpenApiObject Status415ProblemDetails
     {
         get;
@@ -142,11 +136,10 @@ public class ProblemDetailsOperationFilter : IOperationFilter
         ["traceId"] = new OpenApiString("00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00")
     };
 
-
-    //
-    // Summary:
-    //     Gets the 422 Unprocessable Entity example of a Microsoft.AspNetCore.Mvc.ProblemDetails
-    //     response.
+    /// <summary>
+    /// Gets the 422 Unprocessable Entity example of a Microsoft.AspNetCore.Mvc.ProblemDetails
+    ///  response.
+    /// </summary>
     public static OpenApiObject Status422ProblemDetails
     {
         get;
@@ -158,11 +151,10 @@ public class ProblemDetailsOperationFilter : IOperationFilter
         ["traceId"] = new OpenApiString("00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00")
     };
 
-
-    //
-    // Summary:
-    //     Gets the 500 Internal Server Error example of a Microsoft.AspNetCore.Mvc.ProblemDetails
-    //     response.
+    /// <summary>
+    ///   Gets the 500 Internal Server Error example of a Microsoft.AspNetCore.Mvc.ProblemDetails
+    ///     response.
+    /// </summary>
     public static OpenApiObject Status500ProblemDetails
     {
         get;
@@ -175,6 +167,11 @@ public class ProblemDetailsOperationFilter : IOperationFilter
     };
 
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="operation"></param>
+    /// <param name="context"></param>
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
         ArgumentNullException.ThrowIfNull(operation, nameof(operation));

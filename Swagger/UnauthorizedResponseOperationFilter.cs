@@ -5,10 +5,11 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Container.Core.Swagger;
 
-//
-// Summary:
-//     Adds a 401 Unauthorized response to the Swagger response documentation when the
-//     authorization policy contains a Microsoft.AspNetCore.Authorization.Infrastructure.DenyAnonymousAuthorizationRequirement.
+///
+/// <summary>
+///     Adds a 401 Unauthorized response to the Swagger response documentation when the
+///     authorization policy contains a Microsoft.AspNetCore.Authorization.Infrastructure.DenyAnonymousAuthorizationRequirement.
+///     </summary>
 public class UnauthorizedResponseOperationFilter : IOperationFilter
 {
     private static readonly OpenApiResponse UnauthorizedResponse = new()
@@ -16,6 +17,11 @@ public class UnauthorizedResponseOperationFilter : IOperationFilter
         Description = "Unauthorized - The user has not supplied the necessary credentials to access the resource."
     };
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="operation"></param>
+    /// <param name="context"></param>
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
         ArgumentNullException.ThrowIfNull(operation, nameof(operation));

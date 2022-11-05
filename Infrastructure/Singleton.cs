@@ -1,5 +1,9 @@
 ﻿namespace Container.Core.Infrastructure;
 
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public abstract class Singleton<T> : BaseSingleton
 {
     private static T instance;
@@ -16,6 +20,11 @@ public abstract class Singleton<T> : BaseSingleton
             AllSingletons[typeof(T)] = value;
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="val"></param>
+    /// <returns></returns>
     public static T Init(T val) => Instance = val;
 }
 /// <summary>

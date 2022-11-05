@@ -7,9 +7,6 @@ namespace Container.Core.Swagger.ConfigureOptions;
 /// </summary>
 public class ConfigureRouteOptions : IConfigureOptions<RouteOptions>
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="options"></param>
+    /// <inheritdoc/>
     public void Configure(RouteOptions options) => options.LowercaseUrls = true;
 }

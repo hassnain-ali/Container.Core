@@ -4,9 +4,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Container.Core.Swagger;
 
-//
-// Summary:
-//     Adds claims from any authorization policy's Microsoft.AspNetCore.Authorization.Infrastructure.ClaimsAuthorizationRequirement's.
+/// <summary>
+/// Adds claims from any authorization policy's Microsoft.AspNetCore.Authorization.Infrastructure.ClaimsAuthorizationRequirement's.
+/// </summary>
 public class ClaimsOperationFilter : IOperationFilter
 {
     //private const string OAuth2OpenApiReferenceId = "oauth2";
@@ -20,6 +20,11 @@ public class ClaimsOperationFilter : IOperationFilter
         }
     };
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="operation"></param>
+    /// <param name="context"></param>
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
         ArgumentNullException.ThrowIfNull(operation, nameof(operation));

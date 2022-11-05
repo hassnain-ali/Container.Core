@@ -5,26 +5,18 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Container.Core.Swagger.ConfigureOptions;
 
-/// <summary>
-/// 
-/// </summary>
+/// <inheritdoc/>
 public class ConfigureSwaggerUIOptions : IConfigureOptions<SwaggerUIOptions>
 {
     private readonly IApiVersionDescriptionProvider apiVersionDescriptionProvider;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="apiVersionDescriptionProvider"></param>
+    /// <inheritdoc/>
     public ConfigureSwaggerUIOptions(IApiVersionDescriptionProvider apiVersionDescriptionProvider)
     {
         this.apiVersionDescriptionProvider = apiVersionDescriptionProvider;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="options"></param>
+    /// <inheritdoc/>
     public void Configure(SwaggerUIOptions options)
     {
         // Set the Swagger UI browser document title.

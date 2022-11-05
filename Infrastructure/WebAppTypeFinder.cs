@@ -13,7 +13,10 @@ public class WebAppTypeFinder : AppDomainTypeFinder
     #endregion
 
     #region Ctor
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileProvider"></param>
     public WebAppTypeFinder(IContainerFileProvider fileProvider = null) : base(fileProvider)
     {
     }

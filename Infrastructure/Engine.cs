@@ -42,7 +42,7 @@ public class Engine : IEngine
     /// Register dependencies
     /// </summary>
     /// <param name="containerBuilder">Container builder</param>
-    /// <param name="nopConfig">Nop configuration parameters</param>
+    /// <param name="provider">Nop configuration parameters</param>
     public virtual void RegisterDependencies(ContainerBuilder containerBuilder, IServiceProvider provider)
     {
         //register engine
@@ -55,7 +55,7 @@ public class Engine : IEngine
     /// Register dependencies
     /// </summary>
     /// <param name="containerBuilder">Container builder</param>
-    /// <param name="nopConfig">Nop configuration parameters</param>
+    /// <param name="collection">Nop configuration parameters</param>
     public virtual void RegisterDependencies(ContainerBuilder containerBuilder, IServiceCollection collection)
     {
         //register engine

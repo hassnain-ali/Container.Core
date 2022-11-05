@@ -14,19 +14,13 @@ public class ConfigureJsonOptions : IConfigureOptions<JsonOptions>
 {
     private readonly IWebHostEnvironment webHostEnvironment;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="webHostEnvironment"></param>
+    /// <inheritdoc/>
     public ConfigureJsonOptions(IWebHostEnvironment webHostEnvironment)
     {
         this.webHostEnvironment = webHostEnvironment;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="options"></param>
+    /// <inheritdoc/>
     public void Configure(JsonOptions options)
     {
         JsonSerializerOptions jsonSerializerOptions = options.JsonSerializerOptions;

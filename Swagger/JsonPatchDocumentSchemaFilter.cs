@@ -5,11 +5,12 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Container.Core.Swagger;
 
-//
-// Summary:
-//     Shows an example of a Microsoft.AspNetCore.JsonPatch.JsonPatchDocument containing
-//     all the different patch operations you can do and a link to http://jsonpatch.com
-//     for convenience.
+///
+/// <summary>
+///     Shows an example of a Microsoft.AspNetCore.JsonPatch.JsonPatchDocument containing
+///     all the different patch operations you can do and a link to http://jsonpatch.com
+///     for convenience.
+///     </summary>
 public class JsonPatchDocumentSchemaFilter : ISchemaFilter
 {
     private static readonly OpenApiArray Example = new()
@@ -75,6 +76,11 @@ public class JsonPatchDocumentSchemaFilter : ISchemaFilter
         Url = new Uri("http://jsonpatch.com/", UriKind.Absolute)
     };
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="schema"></param>
+    /// <param name="context"></param>
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {
         ArgumentNullException.ThrowIfNull(schema, nameof(schema));

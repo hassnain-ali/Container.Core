@@ -6,29 +6,20 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Container.Core.Swagger.ConfigureOptions;
 
-/// <summary>
-/// 
-/// </summary>
+/// <inheritdoc/>
 public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
 {
     private readonly IApiVersionDescriptionProvider provider;
     private readonly IConfiguration _configuration;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="provider"></param>
-    /// <param name="configuration"></param>
+    /// <inheritdoc/>
     public ConfigureSwaggerGenOptions(IApiVersionDescriptionProvider provider, IConfiguration configuration)
     {
         this.provider = provider;
         _configuration = configuration;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="options"></param>
+    /// <inheritdoc/>
     public void Configure(SwaggerGenOptions options)
     {
         options.DescribeAllParametersInCamelCase();

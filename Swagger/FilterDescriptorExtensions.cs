@@ -7,16 +7,16 @@ namespace Container.Core.Swagger;
 //     System.Collections.Generic.IList`1 extension methods.
 internal static class FilterDescriptorExtensions
 {
-    //
-    // Summary:
-    //     Gets the authorization policy requirements.
-    //
-    // Parameters:
-    //   filterDescriptors:
-    //     The filter descriptors.
-    //
-    // Returns:
-    //     A collection of authorization policy requirements.
+    /// <summary>
+    ///     Gets the authorization policy requirements.
+    ///
+    /// Parameters:
+    ///   filterDescriptors:
+    ///     The filter descriptors.
+    ///
+    /// Returns:
+    ///     A collection of authorization policy requirements.
+    /// </summary>
     public static IList<IAuthorizationRequirement> GetPolicyRequirements(this IList<Microsoft.AspNetCore.Mvc.Filters.FilterDescriptor> filterDescriptors)
     {
         ArgumentNullException.ThrowIfNull(filterDescriptors, nameof(filterDescriptors));

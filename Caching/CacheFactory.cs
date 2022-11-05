@@ -1,18 +1,14 @@
 ﻿namespace Container.Core.Caching;
 
-/// <summary>
-/// 
-/// </summary>
+/// <inheritdoc/>
 public class CacheFactory : IDisposable, ICacheFactory
 {
     private bool _disposed;
     private readonly IMemoryCache _memoryCache;
     private static readonly ConcurrentDictionary<string, CancellationTokenSource> _prefixes = new();
     private static CancellationTokenSource _clearToken = new();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="memoryCache"></param>
+
+    /// <inheritdoc/>
     public CacheFactory(IMemoryCache memoryCache)
     {
         _memoryCache = memoryCache;
@@ -48,13 +44,8 @@ public class CacheFactory : IDisposable, ICacheFactory
 
     #region Methods
 
-    /// <summary>
-    /// Get a cached item. If it's not in the cache yet, then load and cache it
-    /// </summary>
-    /// <typeparam name="T">Type of cached item</typeparam>
-    /// <param name="key">Cache key</param>
-    /// <param name="acquire">Function to load item if it's not in the cache yet</param>
-    /// <returns>The cached value associated with the specified key</returns>
+
+    /// <inheritdoc/>
     public T GetOrCreate<T>(CacheKey key, Func<T> acquire)
     {
         if (key.CacheTime <= 0)
@@ -78,19 +69,12 @@ public class CacheFactory : IDisposable, ICacheFactory
         return result;
     }
 
-    /// <summary>
-    /// Removes the value with the specified key from the cache
-    /// </summary>
-    /// <param name="key">Key of cached item</param>
+
+    /// <inheritdoc/>
     public void Remove(CacheKey key) => _memoryCache.Remove(key.Key);
 
-    /// <summary>
-    /// Get a cached item. If it's not in the cache yet, then load and cache it
-    /// </summary>
-    /// <typeparam name="T">Type of cached item</typeparam>
-    /// <param name="key">Cache key</param>
-    /// <param name="acquire">Function to load item if it's not in the cache yet</param>
-    /// <returns>The cached value associated with the specified key</returns>
+
+    /// <inheritdoc/>
     public async Task<T> GetOrCreateAsync<T>(CacheKey key, Func<Task<T>> acquire)
     {
         if (key.CacheTime <= 0)
@@ -113,11 +97,8 @@ public class CacheFactory : IDisposable, ICacheFactory
         return result;
     }
 
-    /// <summary>
-    /// Adds the specified key and object to the cache
-    /// </summary>
-    /// <param name="key">Key of cached item</param>
-    /// <param name="data">Value for caching</param>
+
+    /// <inheritdoc/>
     public void Set(CacheKey key, object data)
     {
         if (key.CacheTime <= 0 || data == null)
@@ -128,20 +109,12 @@ public class CacheFactory : IDisposable, ICacheFactory
         _ = _memoryCache.Set(key.Key, data, PrepareEntryOptions(key));
     }
 
-    /// <summary>
-    /// Gets a value indicating whether the value associated with the specified key is cached
-    /// </summary>
-    /// <param name="key">Key of cached item</param>
-    /// <returns>True if item already is in cache; otherwise false</returns>
+
+    /// <inheritdoc/>
     public bool IsSet(CacheKey key) => _memoryCache.TryGetValue(key.Key, out _);
 
-    /// <summary>
-    /// Perform some action with exclusive in-memory lock
-    /// </summary>
-    /// <param name="key">The key we are locking on</param>
-    /// <param name="expirationTime">The time after which the lock will automatically be expired</param>
-    /// <param name="action">Action to be performed with locking</param>
-    /// <returns>True if lock was acquired and action was performed; otherwise false</returns>
+
+    /// <inheritdoc/>
     public bool PerformActionWithLock(string key, TimeSpan expirationTime, Action action)
     {
         //ensure that lock is acquired
@@ -166,16 +139,12 @@ public class CacheFactory : IDisposable, ICacheFactory
         }
     }
 
-    /// <summary>
-    /// Removes the value with the specified key from the cache
-    /// </summary>
-    /// <param name="key">Key of cached item</param>
+
+    /// <inheritdoc/>
     public void Remove(string key) => _memoryCache.Remove(key);
 
-    /// <summary>
-    /// Removes items by key prefix
-    /// </summary>
-    /// <param name="prefix">String key prefix</param>
+
+    /// <inheritdoc/>
     public void RemoveByPrefix(string prefix)
     {
         _ = _prefixes.TryRemove(prefix, out CancellationTokenSource tokenSource);
@@ -183,9 +152,8 @@ public class CacheFactory : IDisposable, ICacheFactory
         tokenSource?.Dispose();
     }
 
-    /// <summary>
-    /// Clear all cache data
-    /// </summary>
+
+    /// <inheritdoc/>
     public void Clear()
     {
         _clearToken.Cancel();
@@ -212,16 +180,17 @@ public class CacheFactory : IDisposable, ICacheFactory
         }
         return false;
     }
-    /// <summary>
-    /// Dispose cache manager
-    /// </summary>
+    
+    /// <inheritdoc/>
     public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
 
-    // Protected implementation of Dispose pattern.
+    /// <summary>
+    /// Protected implementation of Dispose pattern.
+    /// </summary>
     protected virtual void Dispose(bool disposing)
     {
         if (_disposed)
