@@ -30,7 +30,7 @@ public static class HttpExtensions
     /// 
     /// </summary>
     /// <param name="app"></param>
-    public static void UseVersionApiSwaggerAPI(this WebApplication app)
+    public static void UseVersionedSwaggerAPI(this WebApplication app)
     {
         _ = app.UseForwardedHeaders();
         _ = app.UseResponseCaching();

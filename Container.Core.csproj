@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<LangVersion>10.0</LangVersion>
-		<Version>1.5.0</Version>
+		<Version>1.5.1</Version>
 		<Description>
 			Autofac configration container for startup projects which includes
 			Dependency container,
