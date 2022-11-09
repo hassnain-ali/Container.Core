@@ -1,23 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<LangVersion>10.0</LangVersion>
 		<Version>1.5.1</Version>
-		<Description>
-			Autofac configration container for startup projects which includes
-			Dependency container,
-			Dependency resolver,
-			Cache (In memory/ Distributed cache),
-			Swagger configration options for versioned API,
-			Swagger operational Filters,
-			Singleton services / Container,
-			Types resolver/ Types finder,
-			Files provider,
-			Enum Helpers,
-			Common Helpers and validation methods,
+		<Description>Autofac configration container for startup projects which includes
+Dependency container,
+Dependency resolver,
+Cache (In memory/ Distributed cache),
+Swagger configration options for versioned API,
+Swagger operational Filters,
+Singleton services / Container,
+Types resolver/ Types finder,
+Files provider,
+Enum Helpers,
+Common Helpers and validation methods,
 
-			Credits: Autofac, .NET Boxed, Nop Commerce
+Credits: Autofac, .NET Boxed, Nop Commerce
 		</Description>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<SignAssembly>True</SignAssembly>
@@ -30,11 +29,19 @@
 		<NeutralLanguage>en-US</NeutralLanguage>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="6.4.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
-		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.10" />
-		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="7.0.0" />
 		<PackageReference Include="NuGet.CommandLine" Version="6.3.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
