@@ -1,22 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 		<LangVersion>10.0</LangVersion>
-		<Version>1.5.1</Version>
-		<Description>Autofac configration container for startup projects which includes
-Dependency container,
-Dependency resolver,
-Cache (In memory/ Distributed cache),
-Swagger configration options for versioned API,
-Swagger operational Filters,
-Singleton services / Container,
-Types resolver/ Types finder,
-Files provider,
-Enum Helpers,
-Common Helpers and validation methods,
+		<Version>2.0.0</Version>
+		<Description>
+			Autofac configration container for startup projects which includes
+			Dependency container,
+			Dependency resolver,
+			Cache (In memory/ Distributed cache),
+			Swagger configration options for versioned API,
+			Swagger operational Filters,
+			Singleton services / Container,
+			Types resolver/ Types finder,
+			Files provider,
+			Enum Helpers,
+			Common Helpers and validation methods,
 
-Credits: Autofac, .NET Boxed, Nop Commerce
+			Credits: Autofac, .NET Boxed, Nop Commerce
 		</Description>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<SignAssembly>True</SignAssembly>
@@ -30,28 +31,22 @@ Credits: Autofac, .NET Boxed, Nop Commerce
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+		<CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+		<CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="6.4.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
 		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="7.0.0" />
 		<PackageReference Include="NuGet.CommandLine" Version="6.3.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
-		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-		<PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
 	</ItemGroup>
