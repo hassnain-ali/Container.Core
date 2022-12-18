@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace Container.Core.Swagger.ConfigureOptions;
+namespace AspNetCore.Container.Swagger.ConfigureOptions;
 
 /// <inheritdoc/>
 public class ConfigureSwaggerUIOptions : IConfigureOptions<SwaggerUIOptions>
@@ -20,7 +20,7 @@ public class ConfigureSwaggerUIOptions : IConfigureOptions<SwaggerUIOptions>
     public void Configure(SwaggerUIOptions options)
     {
         // Set the Swagger UI browser document title.
-        options.DocumentTitle = AssemblyInformation.Current.Product;
+        options.DocumentTitle = AssemblyInformation.Current?.Product;
         // Set the Swagger UI to render at '/'.
         options.RoutePrefix = string.Empty;
 
@@ -30,10 +30,8 @@ public class ConfigureSwaggerUIOptions : IConfigureOptions<SwaggerUIOptions>
         foreach (ApiVersionDescription apiVersionDescription in apiVersionDescriptionProvider
             .ApiVersionDescriptions
             .OrderByDescending(x => x.ApiVersion))
-        {
             options.SwaggerEndpoint(
                 $"/swagger/{apiVersionDescription.GroupName}/swagger.json",
                 $"Version {apiVersionDescription.ApiVersion}");
-        }
     }
 }

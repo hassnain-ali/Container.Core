@@ -1,4 +1,4 @@
-﻿namespace Container.Core.Caching;
+﻿namespace AspNetCore.Container.Caching;
 
 /// <inheritdoc/>
 public class CacheFactory : IDisposable, ICacheFactory
@@ -46,14 +46,12 @@ public class CacheFactory : IDisposable, ICacheFactory
 
 
     /// <inheritdoc/>
-    public T GetOrCreate<T>(CacheKey key, Func<T> acquire)
+    public T? GetOrCreate<T>(CacheKey key, Func<T> acquire)
     {
         if (key.CacheTime <= 0)
-        {
             return acquire();
-        }
-
-        T result = _memoryCache.GetOrCreate(key.Key, entry =>
+        ArgumentNullException.ThrowIfNull(key.Key);
+        var result = _memoryCache.GetOrCreate(key.Key ?? "", entry =>
         {
             _ = entry.SetOptions(PrepareEntryOptions(key));
 
@@ -62,27 +60,23 @@ public class CacheFactory : IDisposable, ICacheFactory
 
         //do not cache null value
         if (result == null)
-        {
             Remove(key);
-        }
 
         return result;
     }
 
 
     /// <inheritdoc/>
-    public void Remove(CacheKey key) => _memoryCache.Remove(key.Key);
+    public void Remove(CacheKey key) => _memoryCache.Remove(key.Key ?? string.Empty);
 
 
     /// <inheritdoc/>
-    public async Task<T> GetOrCreateAsync<T>(CacheKey key, Func<Task<T>> acquire)
+    public async Task<T?> GetOrCreateAsync<T>(CacheKey key, Func<Task<T>> acquire)
     {
         if (key.CacheTime <= 0)
-        {
             return await acquire();
-        }
 
-        T result = await _memoryCache.GetOrCreateAsync(key.Key, async entry =>
+        T? result = await _memoryCache.GetOrCreateAsync(key.Key ?? string.Empty, async entry =>
         {
             _ = entry.SetOptions(PrepareEntryOptions(key));
 
@@ -90,9 +84,7 @@ public class CacheFactory : IDisposable, ICacheFactory
         });
         //do not cache null value
         if (result is null || IsNullOrEmpty(result))//|| result is new())
-        {
             Remove(key);
-        }
 
         return result;
     }
@@ -102,16 +94,14 @@ public class CacheFactory : IDisposable, ICacheFactory
     public void Set(CacheKey key, object data)
     {
         if (key.CacheTime <= 0 || data == null)
-        {
             return;
-        }
 
-        _ = _memoryCache.Set(key.Key, data, PrepareEntryOptions(key));
+        _ = _memoryCache.Set(key.Key ?? string.Empty, data, PrepareEntryOptions(key));
     }
 
 
     /// <inheritdoc/>
-    public bool IsSet(CacheKey key) => _memoryCache.TryGetValue(key.Key, out _);
+    public bool IsSet(CacheKey key) => _memoryCache.TryGetValue(key.Key ?? string.Empty, out _);
 
 
     /// <inheritdoc/>
@@ -119,9 +109,7 @@ public class CacheFactory : IDisposable, ICacheFactory
     {
         //ensure that lock is acquired
         if (IsSet(new(key)))
-        {
             return false;
-        }
 
         try
         {
@@ -147,7 +135,7 @@ public class CacheFactory : IDisposable, ICacheFactory
     /// <inheritdoc/>
     public void RemoveByPrefix(string prefix)
     {
-        _ = _prefixes.TryRemove(prefix, out CancellationTokenSource tokenSource);
+        _ = _prefixes.TryRemove(prefix, out CancellationTokenSource? tokenSource);
         tokenSource?.Cancel();
         tokenSource?.Dispose();
     }
@@ -163,7 +151,7 @@ public class CacheFactory : IDisposable, ICacheFactory
 
         foreach (string prefix in _prefixes.Keys.ToList())
         {
-            _ = _prefixes.TryRemove(prefix, out CancellationTokenSource tokenSource);
+            _ = _prefixes.TryRemove(prefix, out CancellationTokenSource? tokenSource);
             tokenSource?.Dispose();
         }
     }
@@ -180,7 +168,7 @@ public class CacheFactory : IDisposable, ICacheFactory
         }
         return false;
     }
-    
+
     /// <inheritdoc/>
     public void Dispose()
     {
@@ -194,14 +182,10 @@ public class CacheFactory : IDisposable, ICacheFactory
     protected virtual void Dispose(bool disposing)
     {
         if (_disposed)
-        {
             return;
-        }
 
         if (disposing)
-        {
             _memoryCache.Dispose();
-        }
 
         _disposed = true;
     }

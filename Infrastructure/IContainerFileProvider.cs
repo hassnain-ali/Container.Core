@@ -1,4 +1,4 @@
-﻿namespace Container.Core.Infrastructure;
+﻿namespace AspNetCore.Container.Infrastructure;
 
 /// <summary>
 /// 
@@ -107,7 +107,7 @@ public interface IContainerFileProvider
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>
-    string GetDirectoryName(string path);
+    string? GetDirectoryName(string? path);
     /// <summary>
     /// 
     /// </summary>
@@ -169,13 +169,13 @@ public interface IContainerFileProvider
     /// </summary>
     /// <param name="directoryPath"></param>
     /// <returns></returns>
-    string GetParentDirectory(string directoryPath);
+    string? GetParentDirectory(string directoryPath);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>
-    string GetVirtualPath(string path);
+    string? GetVirtualPath(string? path);
     /// <summary>
     /// 
     /// </summary>

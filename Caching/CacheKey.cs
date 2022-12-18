@@ -1,4 +1,4 @@
-﻿namespace Container.Core.Caching;
+﻿namespace AspNetCore.Container.Caching;
 
 /// <summary>
 /// 
@@ -26,16 +26,12 @@ public partial class CacheKey
         Init(cacheKey.Key, cacheKey.CacheTime, cacheKey.Prefixes.ToArray());
 
         if (!keyObjects.Any())
-        {
             return;
-        }
 
         Key = string.Format(_keyFormat, keyObjects.Select(createCacheKeyParameters).ToArray());
 
         for (int i = 0; i < Prefixes.Count; i++)
-        {
             Prefixes[i] = string.Format(Prefixes[i], keyObjects.Select(createCacheKeyParameters).ToArray());
-        }
     }
 
     /// <summary>
@@ -69,16 +65,14 @@ public partial class CacheKey
     /// <param name="cacheKey">Cache key</param>
     /// <param name="cacheTime">Cache time; set to null to use the default value</param>
     /// <param name="prefixes">Prefixes to remove by prefix functionality</param>
-    protected void Init(string cacheKey, int? cacheTime = null, params string[] prefixes)
+    protected void Init(string? cacheKey, int? cacheTime = null, params string[] prefixes)
     {
         Key = cacheKey;
 
-        _keyFormat = cacheKey;
+        _keyFormat = cacheKey ?? string.Empty;
 
         if (cacheTime.HasValue)
-        {
             CacheTime = cacheTime.Value;
-        }
 
         Prefixes.AddRange(prefixes.Where(prefix => !string.IsNullOrEmpty(prefix)));
     }
@@ -88,7 +82,7 @@ public partial class CacheKey
     /// <summary>
     /// Cache key
     /// </summary>
-    public string Key { get; protected set; }
+    public string? Key { get; protected set; }
 
     /// <summary>
     /// Prefixes to remove by prefix functionality

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Options;
 
-namespace Container.Core.Swagger.ConfigureOptions;
+namespace AspNetCore.Container.Swagger.ConfigureOptions;
 
 /// <inheritdoc/>
 public class ConfigureApiVersioningOptions :

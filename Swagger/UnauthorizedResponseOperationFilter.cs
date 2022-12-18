@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Container.Core.Swagger;
+namespace AspNetCore.Container.Swagger;
 
 ///
 /// <summary>
@@ -28,8 +28,6 @@ public class UnauthorizedResponseOperationFilter : IOperationFilter
         ArgumentNullException.ThrowIfNull(context, nameof(context));
         IList<IAuthorizationRequirement> policyRequirements = context.ApiDescription.ActionDescriptor.FilterDescriptors.GetPolicyRequirements();
         if (!operation.Responses.ContainsKey("401") && policyRequirements.OfType<DenyAnonymousAuthorizationRequirement>().Any())
-        {
             operation.Responses.Add("401", UnauthorizedResponse);
-        }
     }
 }

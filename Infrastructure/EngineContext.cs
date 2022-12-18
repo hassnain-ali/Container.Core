@@ -1,4 +1,4 @@
-﻿namespace Container.Core.Infrastructure;
+﻿namespace AspNetCore.Container.Infrastructure;
 
 /// <summary>
 /// Provides access to the singleton instance of the Nop engine.
@@ -11,8 +11,8 @@ public class EngineContext : Singleton<IEngine>
     /// Create a static instance of the Nop engine.
     /// </summary>
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public static IEngine Create() =>
-        Instance ?? (Init(new Engine()));
+    public static IEngine? Create() =>
+        Instance ?? Init(new Engine());
 
     /// <summary>
     /// Sets the static engine instance to the supplied engine. Use this method to supply your own engine implementation.
@@ -28,14 +28,12 @@ public class EngineContext : Singleton<IEngine>
     /// <summary>
     /// Gets the singleton Nop engine used to access Nop services.
     /// </summary>
-    public static IEngine Current
+    public static IEngine? Current
     {
         get
         {
             if (Instance == null)
-            {
                 _ = Create();
-            }
 
             return Instance;
         }

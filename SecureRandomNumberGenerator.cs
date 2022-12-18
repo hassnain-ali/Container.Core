@@ -1,4 +1,4 @@
-﻿namespace Container.Core;
+﻿namespace AspNetCore.Container;
 
 /// <summary>
 ///  Represents the class implementation of cryptographic random number generator derive
@@ -32,7 +32,7 @@ public partial class SecureRandomNumberGenerator : RandomNumberGenerator
     {
         byte[] data = new byte[sizeof(int)];
         _rng.GetBytes(data);
-        return BitConverter.ToInt32(data, 0) & (int.MaxValue - 1);
+        return BitConverter.ToInt32(data, 0) & int.MaxValue - 1;
     }
     /// <summary>
     /// 
@@ -49,7 +49,7 @@ public partial class SecureRandomNumberGenerator : RandomNumberGenerator
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public int Next(int minValue, int maxValue) => minValue > maxValue
             ? throw new ArgumentOutOfRangeException(nameof(minValue))
-            : (int)Math.Floor(minValue + (((double)maxValue - minValue) * NextDouble()));
+            : (int)Math.Floor(minValue + ((double)maxValue - minValue) * NextDouble());
     /// <summary>
     /// 
     /// </summary>
@@ -79,14 +79,10 @@ public partial class SecureRandomNumberGenerator : RandomNumberGenerator
     protected override void Dispose(bool disposing)
     {
         if (_disposed)
-        {
             return;
-        }
 
         if (disposing)
-        {
             _rng?.Dispose();
-        }
 
         _disposed = true;
     }

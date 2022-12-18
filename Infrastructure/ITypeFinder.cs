@@ -1,4 +1,4 @@
-﻿namespace Container.Core.Infrastructure;
+﻿namespace AspNetCore.Container.Infrastructure;
 
 /// <summary>
 /// 

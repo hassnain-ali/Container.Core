@@ -1,4 +1,6 @@
-﻿namespace Container.Core.Infrastructure;
+﻿using AspNetCore.Container;
+
+namespace AspNetCore.Container.Infrastructure;
 
 /// <summary>
 /// A class that finds types needed by Nop by looping assemblies in the 
@@ -6,7 +8,7 @@
 /// certain patterns are investigated and an optional list of assemblies
 /// referenced by <see cref="AssemblyNames"/> are always investigated.
 /// </summary>
-public class AppDomainTypeFinder : ITypeFinder
+public partial class AppDomainTypeFinder : ITypeFinder
 {
     #region Fields
 
@@ -23,9 +25,9 @@ public class AppDomainTypeFinder : ITypeFinder
     /// 
     /// </summary>
     /// <param name="fileProvider"></param>
-    public AppDomainTypeFinder(IContainerFileProvider fileProvider = null)
+    public AppDomainTypeFinder(IContainerFileProvider? fileProvider = null)
     {
-        _fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+        _fileProvider = (fileProvider ?? AspNetCoreContainerHelper.DefaultFileProvider) ?? throw new ArgumentNullException(nameof(fileProvider));
     }
 
     #endregion
@@ -41,15 +43,12 @@ public class AppDomainTypeFinder : ITypeFinder
     {
         foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
-            if (!Matches(assembly.FullName))
-            {
-                continue;
-            }
+            ArgumentNullException.ThrowIfNull(assembly.FullName);
 
-            if (addedAssemblyNames.Contains(assembly.FullName))
-            {
+            if (!Matches(assembly.FullName))
                 continue;
-            }
+            if (addedAssemblyNames.Contains(assembly.FullName))
+                continue;
 
             assemblies.Add(assembly);
             addedAssemblyNames.Add(assembly.FullName);
@@ -66,10 +65,9 @@ public class AppDomainTypeFinder : ITypeFinder
         foreach (string assemblyName in AssemblyNames)
         {
             Assembly assembly = Assembly.Load(assemblyName);
+            ArgumentNullException.ThrowIfNull(assembly.FullName);
             if (addedAssemblyNames.Contains(assembly.FullName))
-            {
                 continue;
-            }
 
             assemblies.Add(assembly);
             addedAssemblyNames.Add(assembly.FullName);
@@ -114,23 +112,19 @@ public class AppDomainTypeFinder : ITypeFinder
 
         foreach (Assembly a in GetAssemblies())
         {
+            ArgumentNullException.ThrowIfNull(a.FullName);
             loadedAssemblyNames.Add(a.FullName);
         }
 
         if (!_fileProvider.DirectoryExists(directoryPath))
-        {
             return;
-        }
 
         foreach (string dllPath in _fileProvider.GetFiles(directoryPath, "*.dll"))
-        {
             try
             {
                 AssemblyName an = AssemblyName.GetAssemblyName(dllPath);
                 if (Matches(an.FullName) && !loadedAssemblyNames.Contains(an.FullName))
-                {
                     _ = App.Load(an);
-                }
 
                 //old loading stuff
                 //Assembly a = Assembly.ReflectionOnlyLoadFrom(dllPath);
@@ -143,7 +137,6 @@ public class AppDomainTypeFinder : ITypeFinder
             {
                 Trace.TraceError(ex.ToString());
             }
-        }
     }
 
     /// <summary>
@@ -160,14 +153,10 @@ public class AppDomainTypeFinder : ITypeFinder
             foreach (Type implementedInterface in type.FindInterfaces((objType, objCriteria) => true, null))
             {
                 if (!implementedInterface.IsGenericType)
-                {
                     continue;
-                }
 
                 if (genericTypeDefinition.IsAssignableFrom(implementedInterface.GetGenericTypeDefinition()))
-                {
                     return true;
-                }
             }
 
             return false;
@@ -222,7 +211,7 @@ public class AppDomainTypeFinder : ITypeFinder
         {
             foreach (Assembly a in assemblies)
             {
-                Type[] types = null;
+                Type[]? types = null;
                 try
                 {
                     types = a.GetTypes();
@@ -231,49 +220,33 @@ public class AppDomainTypeFinder : ITypeFinder
                 {
                     //Entity Framework 6 doesn't allow getting types (throws an exception)
                     if (!_ignoreReflectionErrors)
-                    {
                         throw;
-                    }
                 }
 
                 if (types == null)
-                {
                     continue;
-                }
 
                 foreach (Type t in types)
                 {
                     if (!assignTypeFrom.IsAssignableFrom(t) && (!assignTypeFrom.IsGenericTypeDefinition || !DoesTypeImplementOpenGeneric(t, assignTypeFrom)))
-                    {
                         continue;
-                    }
 
                     if (t.IsInterface)
-                    {
                         continue;
-                    }
 
                     if (onlyConcreteClasses)
-                    {
                         if (t.IsClass && !t.IsAbstract)
-                        {
                             result.Add(t);
-                        }
-                    }
                     else
-                    {
                         result.Add(t);
-                    }
                 }
             }
         }
         catch (ReflectionTypeLoadException ex)
         {
             string msg = string.Empty;
-            foreach (Exception e in ex.LoaderExceptions)
-            {
-                msg += e.Message + Environment.NewLine;
-            }
+            foreach (Exception? e in ex.LoaderExceptions)
+                msg += e?.Message + Environment.NewLine;
 
             Exception fail = new(msg, ex);
             Debug.WriteLine(fail.Message, fail);
@@ -294,9 +267,7 @@ public class AppDomainTypeFinder : ITypeFinder
         List<Assembly> assemblies = new();
 
         if (LoadAppDomainAssemblies)
-        {
             AddAssembliesInAppDomain(addedAssemblyNames, assemblies);
-        }
 
         AddConfiguredAssemblies(addedAssemblyNames, assemblies);
 

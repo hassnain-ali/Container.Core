@@ -1,5 +1,5 @@
-﻿global using Autofac;
-global using Container.Core.Infrastructure;
+﻿global using AspNetCore.Container.Infrastructure;
+global using Autofac;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.Extensions.Caching.Memory;
 global using Microsoft.Extensions.DependencyInjection;

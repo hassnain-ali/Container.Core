@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Options;
 
-namespace Container.Core.Swagger.ConfigureOptions;
+namespace AspNetCore.Container.Swagger.ConfigureOptions;
 /// <summary>
 /// Configures the Strict-Transport-Security HTTP header on responses. This HTTP header is only relevant if you are
 /// using TLS. It ensures that content is loaded over HTTPS and refuses to connect in case of certificate errors and

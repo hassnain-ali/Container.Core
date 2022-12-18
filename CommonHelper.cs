@@ -1,9 +1,9 @@
-﻿namespace Container.Core;
+﻿namespace AspNetCore.Container;
 
 /// <summary>
 /// Represents a common helper
 /// </summary>
-public partial class CommonHelper
+public partial class AspNetCoreContainerHelper
 {
     #region Fields
 
@@ -16,7 +16,7 @@ public partial class CommonHelper
 
     #region Ctor
 
-    static CommonHelper()
+    static AspNetCoreContainerHelper()
     {
         _emailRegex = new Regex(EMAIL_EXPRESSION, RegexOptions.IgnoreCase);
     }
@@ -47,9 +47,7 @@ public partial class CommonHelper
     public static bool IsValidEmail(string email)
     {
         if (string.IsNullOrEmpty(email))
-        {
             return false;
-        }
 
         email = email.Trim();
 
@@ -73,9 +71,7 @@ public partial class CommonHelper
         using SecureRandomNumberGenerator random = new();
         string str = string.Empty;
         for (int i = 0; i < length; i++)
-        {
             str = string.Concat(str, random.Next(10).ToString());
-        }
 
         return str;
     }
@@ -99,25 +95,19 @@ public partial class CommonHelper
     /// <param name="maxLength">Maximum length</param>
     /// <param name="postfix">A string to add to the end if the original string was shorten</param>
     /// <returns>Input string if its length is OK; otherwise, truncated input string</returns>
-    public static string EnsureMaximumLength(string str, int maxLength, string postfix = null)
+    public static string EnsureMaximumLength(string str, int maxLength, string? postfix = null)
     {
         if (string.IsNullOrEmpty(str))
-        {
             return str;
-        }
 
         if (str.Length <= maxLength)
-        {
             return str;
-        }
 
         int pLen = postfix?.Length ?? 0;
 
         string result = str[..(maxLength - pLen)];
         if (!string.IsNullOrEmpty(postfix))
-        {
             result += postfix;
-        }
 
         return result;
     }
@@ -157,19 +147,13 @@ public partial class CommonHelper
     {
         //also see Enumerable.SequenceEqual(a1, a2);
         if (ReferenceEquals(a1, a2))
-        {
             return true;
-        }
 
         if (a1 == null || a2 == null)
-        {
             return false;
-        }
 
         if (a1.Length != a2.Length)
-        {
             return false;
-        }
 
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         return !a1.Where((t, i) => !comparer.Equals(t, a2[i])).Any();
@@ -181,34 +165,24 @@ public partial class CommonHelper
     /// <param name="instance">The object whose property to set.</param>
     /// <param name="propertyName">The name of the property to set.</param>
     /// <param name="value">The value to set the property to.</param>
-    public static void SetProperty(object instance, string propertyName, object value)
+    public static void SetProperty(object instance, string propertyName, object? value)
     {
         if (instance == null)
-        {
             throw new ArgumentNullException(nameof(instance));
-        }
 
         if (propertyName == null)
-        {
             throw new ArgumentNullException(nameof(propertyName));
-        }
 
         Type instanceType = instance.GetType();
-        PropertyInfo pi = instanceType.GetProperty(propertyName);
+        PropertyInfo? pi = instanceType.GetProperty(propertyName);
         if (pi == null)
-        {
             throw new Exception("No property '{0}' found on the instance of type '{1}'.");
-        }
 
         if (!pi.CanWrite)
-        {
             throw new Exception("The property '{0}' on the instance of type '{1}' does not have a setter.");
-        }
 
         if (value != null && !value.GetType().IsAssignableFrom(pi.PropertyType))
-        {
             value = To(value, pi.PropertyType);
-        }
 
         pi.SetValue(instance, value, Array.Empty<object>());
     }
@@ -219,7 +193,7 @@ public partial class CommonHelper
     /// <param name="value">The value to convert.</param>
     /// <param name="destinationType">The type to convert the value to.</param>
     /// <returns>The converted value.</returns>
-    public static object To(object value, Type destinationType)
+    public static object? To(object? value, Type? destinationType)
     => To(value, destinationType, CultureInfo.InvariantCulture);
 
     /// <summary>
@@ -229,20 +203,16 @@ public partial class CommonHelper
     /// <param name="destinationType">The type to convert the value to.</param>
     /// <param name="culture">Culture</param>
     /// <returns>The converted value.</returns>
-    public static object To(object value, Type destinationType, CultureInfo culture)
+    public static object? To(object? value, Type? destinationType, CultureInfo culture)
     {
-        if (value == null)
-        {
+        if (value == null || destinationType == null)
             return null;
-        }
 
         Type sourceType = value.GetType();
 
         TypeConverter destinationConverter = TypeDescriptor.GetConverter(destinationType);
         if (destinationConverter.CanConvertFrom(value.GetType()))
-        {
             return destinationConverter.ConvertFrom(null, culture, value);
-        }
 
         TypeConverter sourceConverter = TypeDescriptor.GetConverter(sourceType);
         return sourceConverter.CanConvertTo(destinationType)
@@ -258,9 +228,9 @@ public partial class CommonHelper
     /// <param name="value">The value to convert.</param>
     /// <typeparam name="T">The type to convert the value to.</typeparam>
     /// <returns>The converted value.</returns>
-    public static T To<T>(object value) =>
+    public static T? To<T>(object? value) =>
         //return (T)Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
-        (T)To(value, typeof(T));
+        (T?)To(value, typeof(T?));
 
     /// <summary>
     /// Convert enum for front-end
@@ -270,22 +240,14 @@ public partial class CommonHelper
     public static string ConvertEnum(string str)
     {
         if (string.IsNullOrEmpty(str))
-        {
             return string.Empty;
-        }
 
         string result = string.Empty;
         foreach (char c in str)
-        {
             if (c.ToString() != c.ToString().ToLower())
-            {
                 result += " " + c.ToString();
-            }
             else
-            {
                 result += c.ToString();
-            }
-        }
 
         //ensure no spaces (e.g. when the first letter is upper case)
         result = result.TrimStart();
@@ -304,9 +266,7 @@ public partial class CommonHelper
         //this assumes you are looking for the western idea of age and not using East Asian reckoning.
         int age = endDate.Year - startDate.Year;
         if (startDate > endDate.AddYears(-age))
-        {
             age--;
-        }
 
         return age;
     }
@@ -317,29 +277,23 @@ public partial class CommonHelper
     /// <param name="target">Target object</param>
     /// <param name="fieldName">Field name</param>
     /// <returns>Value</returns>
-    public static object GetPrivateFieldValue(object target, string fieldName)
+    public static object? GetPrivateFieldValue(object target, string fieldName)
     {
         if (target == null)
-        {
             throw new ArgumentNullException(nameof(target), "The assignment target cannot be null.");
-        }
 
         if (string.IsNullOrEmpty(fieldName))
-        {
             throw new ArgumentException("The field name cannot be null or empty.", nameof(fieldName));
-        }
 
-        Type t = target.GetType();
-        FieldInfo fi = null;
+        Type? t = target.GetType();
+        FieldInfo? fi = null;
 
         while (t != null)
         {
             fi = t.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
 
             if (fi != null)
-            {
                 break;
-            }
 
             t = t.BaseType;
         }
@@ -354,7 +308,7 @@ public partial class CommonHelper
     /// <summary>
     /// Gets or sets the default file provider
     /// </summary>
-    public static IContainerFileProvider DefaultFileProvider { get; set; }
+    public static IContainerFileProvider? DefaultFileProvider { get; set; }
 
     #endregion
 }

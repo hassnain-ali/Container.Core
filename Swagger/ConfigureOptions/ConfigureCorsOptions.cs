@@ -1,8 +1,8 @@
-using Container.Core.Swagger.Constants;
+using AspNetCore.Container.Swagger.Constants;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Options;
 
-namespace Container.Core.Swagger.ConfigureOptions;
+namespace AspNetCore.Container.Swagger.ConfigureOptions;
 /// <summary>
 /// Configures cross-origin resource sharing (CORS) policies.
 /// See https://docs.asp.net/en/latest/security/cors.html.

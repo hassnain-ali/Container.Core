@@ -1,4 +1,4 @@
-﻿namespace Container.Core.Caching;
+﻿namespace AspNetCore.Container.Caching;
 
 /// <summary>
 /// 
@@ -20,7 +20,7 @@ public interface ICacheFactory
     /// <param name="key">Cache key</param>
     /// <param name="acquire">Function to load item if it's not in the cache yet</param>
     /// <returns>The cached value associated with the specified key</returns>
-    T GetOrCreate<T>(CacheKey key, Func<T> acquire);
+    T? GetOrCreate<T>(CacheKey key, Func<T> acquire);
     /// <summary>
     /// Get a cached item. If it's not in the cache yet, then load and cache it
     /// </summary>
@@ -28,7 +28,7 @@ public interface ICacheFactory
     /// <param name="key">Cache key</param>
     /// <param name="acquire">Function to load item if it's not in the cache yet</param>
     /// <returns>The cached value associated with the specified key</returns>
-    Task<T> GetOrCreateAsync<T>(CacheKey key, Func<Task<T>> acquire);
+    Task<T?> GetOrCreateAsync<T>(CacheKey key, Func<Task<T>> acquire);
     /// <summary>
     /// Gets a value indicating whether the value associated with the specified key is cached
     /// </summary>

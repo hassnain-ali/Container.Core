@@ -1,7 +1,7 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Container.Core.Swagger;
+namespace AspNetCore.Container.Swagger;
 
 /// <summary>
 /// 
@@ -40,14 +40,10 @@ public static class AnnotationsSwaggerGenOptionsExtensions
             options.SelectDiscriminatorNameUsing(AnnotationsDiscriminatorNameSelector);
             options.SelectDiscriminatorValueUsing(AnnotationsDiscriminatorValueSelector);
             if (enableAnnotationsForInheritance)
-            {
                 options.UseAllOfForInheritance();
-            }
 
             if (enableAnnotationsForPolymorphism)
-            {
                 options.UseOneOfForPolymorphism();
-            }
         }
     }
     /// <summary>
@@ -73,23 +69,21 @@ public static class AnnotationsSwaggerGenOptionsExtensions
     {
         IEnumerable<SwaggerSubTypeAttribute> source = type.GetCustomAttributes(inherit: false).OfType<SwaggerSubTypeAttribute>();
         if (source.Any())
-        {
-            return source.Select((SwaggerSubTypeAttribute attr) => attr.SubType);
-        }
+            return source.Select((attr) => attr.SubType);
 
-        SwaggerSubTypeAttribute swaggerSubTypesAttribute = type.GetCustomAttributes(inherit: false).OfType<SwaggerSubTypeAttribute>().FirstOrDefault();
+        SwaggerSubTypeAttribute? swaggerSubTypesAttribute = type.GetCustomAttributes(inherit: false).OfType<SwaggerSubTypeAttribute>().FirstOrDefault();
         return swaggerSubTypesAttribute != null ? new List<Type>() { swaggerSubTypesAttribute.SubType } : Enumerable.Empty<Type>();
     }
 
-    private static string AnnotationsDiscriminatorNameSelector(Type baseType)
+    private static string? AnnotationsDiscriminatorNameSelector(Type baseType)
     {
-        SwaggerDiscriminatorAttribute swaggerDiscriminatorAttribute = baseType.GetCustomAttributes(inherit: false).OfType<SwaggerDiscriminatorAttribute>().FirstOrDefault();
+        SwaggerDiscriminatorAttribute? swaggerDiscriminatorAttribute = baseType.GetCustomAttributes(inherit: false).OfType<SwaggerDiscriminatorAttribute>().FirstOrDefault();
         return swaggerDiscriminatorAttribute != null
             ? swaggerDiscriminatorAttribute.PropertyName
             : (baseType.GetCustomAttributes(inherit: false).OfType<SwaggerSubTypeAttribute>().FirstOrDefault()?.DiscriminatorValue);
     }
 
-    private static string AnnotationsDiscriminatorValueSelector(Type subType) => subType.BaseType == null
+    private static string? AnnotationsDiscriminatorValueSelector(Type subType) => subType.BaseType == null
             ? null
-            : (subType.BaseType!.GetCustomAttributes(inherit: false).OfType<SwaggerSubTypeAttribute>().FirstOrDefault((SwaggerSubTypeAttribute attr) => attr.SubType == subType)?.DiscriminatorValue);
+            : (subType.BaseType!.GetCustomAttributes(inherit: false).OfType<SwaggerSubTypeAttribute>().FirstOrDefault((attr) => attr.SubType == subType)?.DiscriminatorValue);
 }

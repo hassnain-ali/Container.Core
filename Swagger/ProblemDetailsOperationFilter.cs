@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Container.Core.Swagger;
+namespace AspNetCore.Container.Swagger;
 
 /// <summary>
 ///     Shows an example of a Microsoft.AspNetCore.Mvc.ProblemDetails containing errors. 
@@ -177,7 +177,6 @@ public class ProblemDetailsOperationFilter : IOperationFilter
         ArgumentNullException.ThrowIfNull(operation, nameof(operation));
         ArgumentNullException.ThrowIfNull(context, nameof(context));
         foreach (KeyValuePair<string, OpenApiResponse> response in operation.Responses)
-        {
             switch (response.Key)
             {
                 case "400":
@@ -208,22 +207,17 @@ public class ProblemDetailsOperationFilter : IOperationFilter
                     SetDefaultAndExample(response.Value, Status500ProblemDetails);
                     break;
             }
-        }
     }
 
     private static void SetDefaultAndExample(OpenApiResponse value, OpenApiObject status500ProblemDetails)
     {
         if (value.Content != null)
         {
-            if (value.Content.TryGetValue("application/problem+json", out OpenApiMediaType value2))
-            {
+            if (value.Content.TryGetValue("application/problem+json", out OpenApiMediaType? value2))
                 value2.Example = status500ProblemDetails;
-            }
 
-            if (value.Content.TryGetValue("application/problem+xml", out OpenApiMediaType value3))
-            {
+            if (value.Content.TryGetValue("application/problem+xml", out OpenApiMediaType? value3))
                 value3.Example = status500ProblemDetails;
-            }
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using Container.Core.Swagger.ConfigureOptions;
+﻿using AspNetCore.Container.Swagger.ConfigureOptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
-namespace Container.Core.Swagger;
+namespace AspNetCore.Container.Swagger;
 
 /// <summary>
 /// 

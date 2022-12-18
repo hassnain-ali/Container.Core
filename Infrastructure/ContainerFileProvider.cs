@@ -1,6 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Microsoft.AspNetCore.Hosting;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Container.Core.Infrastructure;
+namespace AspNetCore.Container.Infrastructure;
 
 /// <summary>
 /// IO functions using the on-disk file system
@@ -8,15 +9,26 @@ namespace Container.Core.Infrastructure;
 public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvider
 {
     /// <summary>
-    /// Initializes a new instance of a NopFileProvider
+    /// Initializes a new instance of a IContainerFileProvider
     /// </summary>
-    /// <param name="path">Hosting environment</param>
-    public ContainerFileProvider(string path)
-        : base(path)
+    /// <param name="webRootPath">Hosting environment</param>
+    public ContainerFileProvider(string webRootPath)
+        : base(webRootPath)
     {
-        WebRootPath = path;
+        WebRootPath = webRootPath;
     }
 
+    /// <summary>
+    /// Initializes a new instance of a IContainerFileProvider
+    /// </summary>
+    /// <param name="webHostEnvironment">Hosting environment</param>
+    public ContainerFileProvider(IWebHostEnvironment webHostEnvironment)
+        : base(File.Exists(webHostEnvironment.ContentRootPath) ? Path.GetDirectoryName(webHostEnvironment.ContentRootPath) ?? webHostEnvironment.ContentRootPath : webHostEnvironment.ContentRootPath)
+    {
+        WebRootPath = File.Exists(webHostEnvironment.WebRootPath)
+            ? Path.GetDirectoryName(webHostEnvironment.WebRootPath) ?? string.Empty
+            : webHostEnvironment.WebRootPath;
+    }
     #region Utilities
 
     private static void DeleteDirectoryRecursive(string path)
@@ -33,9 +45,7 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
         {
             curIteration += 1;
             if (curIteration > maxIterationToWait)
-            {
                 return;
-            }
 
             Thread.Sleep(100);
         }
@@ -48,7 +58,7 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     /// <param name="path">The path to be tested.</param>
     /// <returns><see langword="true"/> if the path is a valid UNC path; 
     /// otherwise, <see langword="false"/>.</returns>
-    protected static bool IsUncPath(string path) => Uri.TryCreate(path, UriKind.Absolute, out Uri uri) && uri.IsUnc;
+    protected static bool IsUncPath(string path) => Uri.TryCreate(path, UriKind.Absolute, out Uri? uri) && uri.IsUnc;
 
     #endregion
 
@@ -64,10 +74,8 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
         string path = Path.Combine(paths.SelectMany(p => IsUncPath(p) ? new[] { p } : p.Split('\\', '/')).ToArray());
 
         if (Environment.OSVersion.Platform == PlatformID.Unix && !IsUncPath(path))
-        {
             //add leading slash to correctly form path in the UNIX system
             path = "/" + path;
-        }
 
         return path;
     }
@@ -76,12 +84,12 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     /// Creates all directories and subdirectories in the specified path unless they already exist
     /// </summary>
     /// <param name="path">The directory to create</param>
-    public virtual void CreateDirectory(string path)
+    public virtual void CreateDirectory(string? path)
     {
+        ArgumentNullException.ThrowIfNull(path);
+
         if (!DirectoryExists(path))
-        {
             _ = Directory.CreateDirectory(path);
-        }
     }
 
     /// <summary>
@@ -91,9 +99,7 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     public virtual void CreateFile(string path)
     {
         if (FileExists(path))
-        {
             return;
-        }
 
         FileInfo fileInfo = new(path);
         CreateDirectory(fileInfo.DirectoryName);
@@ -111,17 +117,13 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     public void DeleteDirectory(string path)
     {
         if (string.IsNullOrEmpty(path))
-        {
             throw new ArgumentNullException(path);
-        }
 
         //find more info about directory deletion
         //and why we use this approach at https://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
 
         foreach (string directory in Directory.GetDirectories(path))
-        {
             DeleteDirectory(directory);
-        }
 
         try
         {
@@ -144,9 +146,7 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     public virtual void DeleteFile(string filePath)
     {
         if (!FileExists(filePath))
-        {
             return;
-        }
 
         File.Delete(filePath);
     }
@@ -159,7 +159,7 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     /// true if path refers to an existing directory; false if the directory does not exist or an error occurs when
     /// trying to determine if the specified file exists
     /// </returns>
-    public virtual bool DirectoryExists(string path) => Directory.Exists(path);
+    public virtual bool DirectoryExists(string? path) => Directory.Exists(path);
 
     /// <summary>
     /// Moves a file or a directory and its contents to a new location
@@ -235,9 +235,7 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
         List<string> allPaths = new();
 
         if (paths.Any() && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
-        {
             allPaths.Add(WebRootPath);
-        }
 
         allPaths.AddRange(paths);
 
@@ -284,9 +282,7 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     public virtual string[] GetDirectories(string path, string searchPattern = "", bool topDirectoryOnly = true)
     {
         if (string.IsNullOrEmpty(searchPattern))
-        {
             searchPattern = "*";
-        }
 
         return Directory.GetDirectories(path, searchPattern,
             topDirectoryOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
@@ -300,7 +296,7 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     /// Directory information for path, or null if path denotes a root directory or is null. Returns
     /// System.String.Empty if path does not contain directory information
     /// </returns>
-    public virtual string GetDirectoryName(string path) => Path.GetDirectoryName(path);
+    public virtual string? GetDirectoryName(string? path) => Path.GetDirectoryName(path);
 
     /// <summary>
     /// Returns the directory name only for the specified path string
@@ -351,9 +347,7 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     public virtual string[] GetFiles(string directoryPath, string searchPattern = "", bool topDirectoryOnly = true)
     {
         if (string.IsNullOrEmpty(searchPattern))
-        {
             searchPattern = "*.*";
-        }
 
         return Directory.GetFiles(directoryPath, searchPattern,
             topDirectoryOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
@@ -392,24 +386,20 @@ public class ContainerFileProvider : PhysicalFileProvider, IContainerFileProvide
     /// </summary>
     /// <param name="directoryPath">The path for which to retrieve the parent directory</param>
     /// <returns>The parent directory, or null if path is the root directory, including the root of a UNC server or share name</returns>
-    public virtual string GetParentDirectory(string directoryPath) => Directory.GetParent(directoryPath).FullName;
+    public virtual string? GetParentDirectory(string directoryPath) => Directory.GetParent(directoryPath)?.FullName;
 
     /// <summary>
     /// Gets a virtual path from a physical disk path.
     /// </summary>
     /// <param name="path">The physical disk path</param>
     /// <returns>The virtual path. E.g. "~/bin"</returns>
-    public virtual string GetVirtualPath(string path)
+    public virtual string? GetVirtualPath(string? path)
     {
         if (string.IsNullOrEmpty(path))
-        {
             return path;
-        }
 
         if (!IsDirectory(path) && FileExists(path))
-        {
-            path = new FileInfo(path).DirectoryName;
-        }
+            path = new FileInfo(path)?.DirectoryName;
 
         path = path?.Replace(WebRootPath, string.Empty).Replace('\\', '/').Trim('/').TrimStart('~', '/');
 

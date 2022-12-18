@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Container.Core.Swagger;
+namespace AspNetCore.Container.Swagger;
 
 ///
 /// <summary>
@@ -34,20 +34,14 @@ public class ForbiddenResponseOperationFilter : IOperationFilter
         ArgumentNullException.ThrowIfNull(context, nameof(context));
         IList<IAuthorizationRequirement> policyRequirements = context.ApiDescription.ActionDescriptor.FilterDescriptors.GetPolicyRequirements();
         if (!operation.Responses.ContainsKey("403") && HasAuthorizationRequirement(policyRequirements))
-        {
             operation.Responses.Add("403", ForbiddenResponse);
-        }
     }
 
     private static bool HasAuthorizationRequirement(IEnumerable<IAuthorizationRequirement> authorizationRequirements)
     {
         foreach (IAuthorizationRequirement authorizationRequirement in authorizationRequirements)
-        {
             if (authorizationRequirement is ClaimsAuthorizationRequirement or NameAuthorizationRequirement or OperationAuthorizationRequirement or RolesAuthorizationRequirement or AssertionRequirement)
-            {
                 return true;
-            }
-        }
 
         return false;
     }

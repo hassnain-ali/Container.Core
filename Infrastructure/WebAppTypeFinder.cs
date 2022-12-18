@@ -1,4 +1,4 @@
-﻿namespace Container.Core.Infrastructure;
+﻿namespace AspNetCore.Container.Infrastructure;
 
 /// <summary>
 /// Provides information about types in the current web application. 
@@ -17,7 +17,7 @@ public class WebAppTypeFinder : AppDomainTypeFinder
     /// 
     /// </summary>
     /// <param name="fileProvider"></param>
-    public WebAppTypeFinder(IContainerFileProvider fileProvider = null) : base(fileProvider)
+    public WebAppTypeFinder(IContainerFileProvider? fileProvider = null) : base(fileProvider)
     {
     }
 
@@ -47,9 +47,7 @@ public class WebAppTypeFinder : AppDomainTypeFinder
     public override IList<Assembly> GetAssemblies()
     {
         if (!EnsureBinFolderAssembliesLoaded || _binFolderAssembliesLoaded)
-        {
             return base.GetAssemblies();
-        }
 
         _binFolderAssembliesLoaded = true;
         string binPath = GetBinDirectory();

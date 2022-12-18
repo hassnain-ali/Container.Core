@@ -1,6 +1,6 @@
 ﻿using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Container.Core.Swagger;
+namespace AspNetCore.Container.Swagger;
 
 /// <summary>
 /// <see cref="SwaggerGenOptions"/>  extension methods.
@@ -23,7 +23,7 @@ public static class SwaggerGenOptionsExtensions
         if (!string.IsNullOrEmpty(assembly.Location))
         {
             string filePath = Path.ChangeExtension(assembly.Location, ".xml");
-            _ = IncludeXmlCommentsIfExists(options, filePath);
+            _ = options.IncludeXmlCommentsIfExists(filePath);
         }
 
         return options;

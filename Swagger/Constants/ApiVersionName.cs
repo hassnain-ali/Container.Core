@@ -1,4 +1,4 @@
-namespace Container.Core.Swagger.Constants;
+namespace AspNetCore.Container.Swagger.Constants;
 
 /// <summary>
 /// 

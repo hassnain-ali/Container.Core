@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Container.Core.Swagger.ConfigureOptions;
+namespace AspNetCore.Container.Swagger.ConfigureOptions;
 
 /// <summary>
 /// 

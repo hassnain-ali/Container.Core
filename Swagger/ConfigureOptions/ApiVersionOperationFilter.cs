@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Container.Core.Swagger.ConfigureOptions;
+namespace AspNetCore.Container.Swagger.ConfigureOptions;
 
 /// <summary>
 /// An Open API operation filter used to document the implicit API version parameter.
@@ -24,9 +24,7 @@ public class ApiVersionOperationFilter : IOperationFilter
         operation.Deprecated |= apiDescription.IsDeprecated();
 
         if (operation.Parameters is null)
-        {
             return;
-        }
 
         foreach (OpenApiParameter parameter in operation.Parameters)
         {
@@ -36,9 +34,7 @@ public class ApiVersionOperationFilter : IOperationFilter
             parameter.Description ??= description.ModelMetadata?.Description;
 
             if (parameter.Schema.Default is null && description.DefaultValue is not null)
-            {
                 parameter.Schema.Default = new OpenApiString(description.DefaultValue.ToString());
-            }
 
             parameter.Required |= description.IsRequired;
         }

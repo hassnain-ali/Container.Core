@@ -1,4 +1,4 @@
-﻿namespace Container.Core;
+﻿namespace AspNetCore.Container.Models;
 
 /// <summary>
 /// Selectable item type
@@ -9,14 +9,14 @@ public class SelectableItem
     /// 
     /// </summary>
     public int Id { get; set; }
-    
+
     /// <summary>
     /// 
     /// </summary>
-    public string Type { get; set; }
-    
+    public string? Type { get; set; }
+
     /// <summary>
     /// 
     /// </summary>
-    public string DisplayName { get; set; }
+    public string? DisplayName { get; set; }
 }

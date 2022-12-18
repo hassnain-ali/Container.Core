@@ -1,7 +1,7 @@
-﻿namespace Container.Core.Infrastructure;
+﻿namespace AspNetCore.Container.Infrastructure;
 
 /// <summary>
-/// Represents Nop engine
+/// Represents Container engine
 /// </summary>
 public class Engine : IEngine
 {
@@ -16,7 +16,7 @@ public class Engine : IEngine
     /// <summary>
     /// Gets or sets service provider
     /// </summary>
-    public IServiceProvider ServiceProvider { get; set; }
+    public IServiceProvider? ServiceProvider { get; set; }
 
     #endregion
 
@@ -26,15 +26,13 @@ public class Engine : IEngine
     /// Get IServiceProvider
     /// </summary>
     /// <returns>IServiceProvider</returns>
-    protected IServiceProvider GetServiceProvider()
+    protected IServiceProvider? GetServiceProvider()
     {
         if (ServiceProvider == null)
-        {
             return null;
-        }
 
-        IHttpContextAccessor accessor = ServiceProvider?.GetService<IHttpContextAccessor>();
-        HttpContext context = accessor?.HttpContext;
+        IHttpContextAccessor? accessor = ServiceProvider?.GetService<IHttpContextAccessor>();
+        HttpContext? context = accessor?.HttpContext;
         return context?.RequestServices ?? ServiceProvider;
     }
 
@@ -60,7 +58,7 @@ public class Engine : IEngine
     {
         //register engine
         _ = containerBuilder.RegisterInstance(this).As<IEngine>().SingleInstance();
-        ServiceProvider provider = collection.BuildServiceProvider();
+        ServiceProvider? provider = collection.BuildServiceProvider();
         _ = containerBuilder.RegisterInstance(provider).AsSelf().SingleInstance();
         ServiceProvider = provider;
     }
@@ -75,14 +73,14 @@ public class Engine : IEngine
     /// </summary>
     /// <typeparam name="T">Type of resolved service</typeparam>
     /// <returns>Resolved service</returns>
-    public T Resolve<T>() where T : class => (T)Resolve(typeof(T));
+    public T? Resolve<T>() where T : class => (T?)Resolve(typeof(T));
 
     /// <summary>
     /// Resolve dependency
     /// </summary>
     /// <param name="type">Type of resolved service</param>
     /// <returns>Resolved service</returns>
-    public object Resolve(Type type)
+    public object? Resolve(Type type)
         => GetServiceProvider()?.GetService(type);
 
 
@@ -91,24 +89,23 @@ public class Engine : IEngine
     /// </summary>
     /// <typeparam name="T">Type of resolved services</typeparam>
     /// <returns>Collection of resolved services</returns>
-    public virtual IEnumerable<T> ResolveAll<T>() => (IEnumerable<T>)GetServiceProvider().GetServices(typeof(T));
+    public virtual IEnumerable<T>? ResolveAll<T>() => (IEnumerable<T>?)GetServiceProvider()?.GetServices(typeof(T));
 
     /// <summary>
     /// Resolve unregistered service
     /// </summary>
     /// <param name="type">Type of service</param>
     /// <returns>Resolved service</returns>
-    public virtual object ResolveUnregistered(Type type)
+    public virtual object? ResolveUnregistered(Type type)
     {
-        Exception innerException = null;
+        Exception? innerException = null;
         foreach (ConstructorInfo constructor in type.GetConstructors())
-        {
             try
             {
                 //try to resolve constructor parameters
                 IEnumerable<object> parameters = constructor.GetParameters().Select(parameter =>
                 {
-                    object service = Resolve(parameter.ParameterType);
+                    object? service = Resolve(parameter.ParameterType);
                     return service ?? throw new Exception("Unknown dependency");
                 });
 
@@ -119,7 +116,6 @@ public class Engine : IEngine
             {
                 innerException = ex;
             }
-        }
 
         throw new Exception("No constructor was found that had all the dependencies satisfied.", innerException);
     }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 
-namespace Container.Core.Swagger;
+namespace AspNetCore.Container.Swagger;
 //
 // Summary:
 //     System.Collections.Generic.IList`1 extension methods.
@@ -25,14 +25,10 @@ internal static class FilterDescriptorExtensions
         {
             Microsoft.AspNetCore.Mvc.Filters.FilterDescriptor filterDescriptor = filterDescriptors[num];
             if (filterDescriptor.Filter is AllowAnonymousFilter)
-            {
                 break;
-            }
 
             if (filterDescriptor.Filter is AuthorizeFilter authorizeFilter && authorizeFilter.Policy != null)
-            {
                 list.AddRange(authorizeFilter.Policy!.Requirements);
-            }
         }
 
         return list;

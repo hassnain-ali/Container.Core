@@ -1,7 +1,7 @@
-﻿using Container.Core.Caching;
+﻿using AspNetCore.Container.Caching;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Container.Core;
+namespace AspNetCore.Container;
 
 /// <summary>
 /// 
@@ -13,12 +13,20 @@ public static class Extensions
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static IServiceCollection AddContainerCore(this IServiceCollection services)
+    [Obsolete("This method is now obsolete. Use AddAspNetCoreCacheFactory Instead.")]
+    public static IServiceCollection AddContainerCore(this IServiceCollection services) => services.AddAspNetCoreCacheFactory();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddAspNetCoreCacheFactory(this IServiceCollection services)
     {
         _ = services.AddMemoryCache();
         _ = services.AddDistributedMemoryCache();
         services.TryAddSingleton<ICacheFactory, CacheFactory>();
-        
+
         return services;
     }
 }

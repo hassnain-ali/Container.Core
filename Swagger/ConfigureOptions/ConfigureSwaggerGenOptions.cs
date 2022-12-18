@@ -1,22 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Container.Core.Swagger.ConfigureOptions;
+namespace AspNetCore.Container.Swagger.ConfigureOptions;
 
 /// <inheritdoc/>
 public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
 {
     private readonly IApiVersionDescriptionProvider provider;
-    private readonly IConfiguration _configuration;
 
     /// <inheritdoc/>
-    public ConfigureSwaggerGenOptions(IApiVersionDescriptionProvider provider, IConfiguration configuration)
+    public ConfigureSwaggerGenOptions(IApiVersionDescriptionProvider provider)
     {
         this.provider = provider;
-        _configuration = configuration;
     }
 
     /// <inheritdoc/>
@@ -43,10 +40,10 @@ public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
         {
             OpenApiInfo info = new()
             {
-                Title = AssemblyInformation.Current.Product,
+                Title = AssemblyInformation.Current?.Product,
                 Description = apiVersionDescription.IsDeprecated ?
-                    $"{AssemblyInformation.Current.Description} This API version has been deprecated." :
-                    AssemblyInformation.Current.Description,
+                    $"{AssemblyInformation.Current?.Description} This API version has been deprecated." :
+                    AssemblyInformation.Current?.Description,
                 Version = apiVersionDescription.ApiVersion.ToString(),
             };
             options.SwaggerDoc(apiVersionDescription.GroupName, info);

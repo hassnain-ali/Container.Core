@@ -1,4 +1,6 @@
-﻿namespace Container.Core;
+﻿using AspNetCore.Container.Models;
+
+namespace AspNetCore.Container;
 
 /// <summary>
 /// 

@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Container.Core.Swagger;
+namespace AspNetCore.Container.Swagger;
 
 /// <summary>
 /// Adds claims from any authorization policy's Microsoft.AspNetCore.Authorization.Infrastructure.ClaimsAuthorizationRequirement's.
@@ -32,7 +32,6 @@ public class ClaimsOperationFilter : IOperationFilter
         List<string> list = (from x in context.ApiDescription.ActionDescriptor.FilterDescriptors.GetPolicyRequirements().OfType<ClaimsAuthorizationRequirement>()
                              select x.ClaimType).ToList();
         if (list.Any())
-        {
             operation.Security = new List<OpenApiSecurityRequirement>
                 {
                     new OpenApiSecurityRequirement
@@ -43,6 +42,5 @@ public class ClaimsOperationFilter : IOperationFilter
                         }
                     }
                 };
-        }
     }
 }

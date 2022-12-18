@@ -1,4 +1,4 @@
-﻿namespace Container.Core.Infrastructure;
+﻿namespace AspNetCore.Container.Infrastructure;
 
 /// <summary>
 /// 
@@ -8,7 +8,7 @@ public interface IEngine
     /// <summary>
     /// 
     /// </summary>
-    IServiceProvider ServiceProvider { get; set; }
+    IServiceProvider? ServiceProvider { get; set; }
     /// <summary>
     /// 
     /// </summary>
@@ -26,23 +26,23 @@ public interface IEngine
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    object Resolve(Type type);
+    object? Resolve(Type type);
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    T Resolve<T>() where T : class;
+    T? Resolve<T>() where T : class;
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    IEnumerable<T> ResolveAll<T>();
+    IEnumerable<T>? ResolveAll<T>();
     /// <summary>
     /// 
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    object ResolveUnregistered(Type type);
+    object? ResolveUnregistered(Type type);
 }

@@ -1,4 +1,4 @@
-﻿namespace Container.Core.Swagger;
+﻿namespace AspNetCore.Container.Swagger;
 
 /// <summary>
 /// 
@@ -8,19 +8,19 @@ public record class AssemblyInformation
     /// <summary>
     /// 
     /// </summary>
-    public string Product;
+    public string? Product;
     /// <summary>
     /// 
     /// </summary>
-    public string Description;
+    public string? Description;
     /// <summary>
     /// 
     /// </summary>
-    public string Version;
+    public string? Version;
     /// <summary>
     /// 
     /// </summary>
-    public static AssemblyInformation Current { get; private set; }// = new(typeof(AssemblyInformation).Assembly);
+    public static AssemblyInformation? Current { get; private set; }// = new(typeof(AssemblyInformation).Assembly);
     /// <summary>
     /// 
     /// </summary>
@@ -33,9 +33,9 @@ public record class AssemblyInformation
     /// <returns></returns>
     public static AssemblyInformation Set(Assembly assembly)
     {
-        string p = assembly.GetCustomAttribute<AssemblyProductAttribute>()!.Product;
-        string d = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()!.Description;
-        string v = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()!.Version;
+        string? p = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
+        string? d = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
+        string? v = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
         Current = new()
         {
             Product = p,
